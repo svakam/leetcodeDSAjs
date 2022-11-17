@@ -23,6 +23,8 @@ var shortestSubarray = function(nums, k) {
     return shortestLength === Infinity ? -1 : shortestLength
 };
 
+console.log(shortestSubarray([2,-1],-1))
+
 // [1], k = 1 -> 1
 // [1,2], k = 4 -> -1
 // [2,-1,2], k = 3
