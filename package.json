@@ -1,0 +1,22 @@
+{
+  "name": "leetcodedsajs",
+  "version": "1.0.0",
+  "description": "leetcode",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/svakam/leetcodeDSAjs.git"
+  },
+  "keywords": [
+    "leetcodedsajs"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/svakam/leetcodeDSAjs/issues"
+  },
+  "homepage": "https://github.com/svakam/leetcodeDSAjs#readme"
+}
