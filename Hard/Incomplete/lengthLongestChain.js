@@ -6,8 +6,10 @@ function solution(list) {
     let recurse = function(i) {
         let s = [list[i]]
         // console.log(s)
+        // console.log(s)
         let final
         for (let j = i; j < list.length; j++) {
+            // console.log(`i: ${i} and j: ${j}`)
             if (list[j + 1]) {
                 // if next number exactly 1 greater, add to stack
                 if (list[j + 1] === list[j] + 1) {
@@ -20,10 +22,9 @@ function solution(list) {
                     let bestStack
                     for (const stack of downstreamStacks) {
                         let numOfBestFit = Infinity
-                        console.log(stack[0])
+                        // console.log(stack[0])
                         if (s[s.length - 1] < stack[0] && stack[0] < numOfBestFit) {
                             bestStack = stack
-                            console.log("hello")
                             // console.log(bestStack)
                             numOfBestFit = stack[0]
                         }
@@ -33,14 +34,24 @@ function solution(list) {
                     let combined = []
                     if (bestStack) {
                         combined = copy.concat(bestStack) // add best stack to curr stack
+                        if (copy[0] === 95) {
+                            // console.log(combined)
+                            downstreamStacks.unshift(combined)
+                            // console.log(downstreamStacks)
+                        }
+                    } else {
+                        combined = copy
                     }
-                    console.log(combined)
-                    downstreamStacks.unshift(combined) // add new stack to all stacks
+                    // console.log(combined)
+                    // add new stack to all stacks
+                    downstreamStacks.unshift(copy)
                     final = downstreamStacks
                     // console.log(final)
                 }
             } else {
-                final = [...s]
+                if (i !== 0) {
+                    final = [...s]
+                }
             }
         }
         return final
@@ -64,7 +75,7 @@ function solution(list) {
 // console.log(solution([1,2,3]), 3)
 // console.log(solution([3,2,1]), 1)
 console.log(solution([1,2,5,3]), 3)
-// console.log(solution([104,102,103,95,96,97,108,105,100,101]), 5)
+console.log(solution([104,102,103,95,96,97,108,105,100,101]), 5)
 
 // [1,2]
 // [5]
