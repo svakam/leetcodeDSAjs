@@ -21,7 +21,7 @@ function generatePasswords(words, maxLen) {
                 
                 addOneWord() // recurse after word is in use, re-iterating over words and using/not using
 
-                currLen -= charsAdded
+                currLen -= charsAdded // done with this word being at this position in stack; remove and move onto next word at this position
                 usedWords[word] = 0
                 stack.pop()
             }
