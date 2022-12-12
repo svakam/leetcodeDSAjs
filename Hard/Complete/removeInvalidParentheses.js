@@ -43,7 +43,7 @@ function removeInvalidParentheses(S) {
     }
 
     reset()
-    recurse(S, 0, 0, 0, expr, 0)
+    recurse(S, 0, 0, 0, "", 0)
     return output
 }
 
