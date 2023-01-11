@@ -5,7 +5,7 @@ function generatePasswords(words, maxLen) {
     let currLen = 0
 
     let addOneWord = function() {
-        // if viable word, add to output
+        // checking at the beginning if curr length is acceptable; if viable combination, add to output
         if (currLen > 0 && currLen <= maxLen) {
             output.push(stack.join(' '))
         }
