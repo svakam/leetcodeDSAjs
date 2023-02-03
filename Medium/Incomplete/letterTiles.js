@@ -1,54 +1,41 @@
-function letterTiles(str) {
-    let combos = 0
-    let indicesUsed = new Set()
-    let distinctLetters = new Set()
-    let strCombos = new Set()
+function letterTiles(tiles) {
+    if (tiles.length < 1) return tiles.length
 
-    let recurse = function(idx, comboLen, currCombo) {
-        while (comboLen >= 0) {
-            if (!indicesUsed.has(idx)) {
-                // add curr combo, indices, str combos
-                currCombo.push(str[idx])
-                indicesUsed.push(idx)
-                strCombos.add(currCombo)
-                
-                // recurse and remove current
-                recurse(idx + 1, comboLen - 1, currCombo)
-                currCombo = currCombo.substring(0, idx)
-                indicesUsed.delete(idx)
+    let map = new Map()
+    let count = 0
+    let str = ''
+
+    // establish map of tile counts
+    for (let tile of tiles) {
+        map.set(tile, map.get(tile) + 1 || 1)
+    }
+
+    function helper() {
+        count++
+
+        for (let [tile, available] of map.entries()) {
+            if (available > 0) {
+                str += tile
+                map.set(tile, map.get(tile) - 1)
+
+                helper()
+
+                str.slice(0, -1)
+                map.set(tile, map.get(tile) + 1)
             }
         }
     }
 
-    for (let comboLen = 1; comboLen <= str.length; comboLen++) {
-        recurse(0, comboLen, "")
-    }
-    return combos
+    helper()
+    return count - 1
 }
 
-// "AAB"
-// { 0, 1, 
-// { "A", }
-// "AAB"
-// "A", "B"
 
-
-// console.log(letterTiles("A"), 1)
-// console.log(letterTiles("AB"), 4)
-// console.log(letterTiles("AAA"), 3)
-console.log(letterTiles("AAB"), 8)
-// console.log(letterTiles("AAABBC"), 188)
-
-// from str length 1 up to str length, get all possible strings
-// either use a letter in a current combo or don't
-
-// "AB"
-// from str length 1 up to str length, get all possible strings
-// "A", "B", "AB", "BA"
-// {
-//  "A", 1
-//  "B", 1
-// }
-// str length 1: "A", "B" - decrement count of used letter
-// str[0] -> add to curr str -> "A"
-// str[1] -> 
+console.log(letterTiles("A"), 1)
+console.log(letterTiles("AB"), 4) 
+// -> "A", "B", "AB", "BA"
+console.log(letterTiles("AAA"), 3) 
+// -> "A", "AA", "AAA"
+ console.log(letterTiles("AAB"), 8)
+// -> "A", "B", "AA", "AB", "BA", "AAB", "ABA", "BAA"
+console.log(letterTiles("AAABBC"), 188)
