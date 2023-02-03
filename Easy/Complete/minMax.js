@@ -43,5 +43,8 @@ function findMaxIndex(arr) {
 }
 
 let arr = [8,16,-3,2,5,100, 9]
+let arr2 = [3,4,5,3,3,6]
 console.log(findMinIndex(arr), 2)
 console.log(findMaxIndex(arr), 5)
+console.log(findMinIndex(arr2), 0)
+console.log(findMaxIndex(arr2), 5)
