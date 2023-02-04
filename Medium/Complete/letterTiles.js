@@ -3,7 +3,7 @@ function letterTiles(tiles) {
 
     let map = new Map()
     let count = 0
-    let str = ''
+    // let str = '' - don't need a string since only the count matters
 
     // establish map of tile counts
     for (let tile of tiles) {
@@ -15,12 +15,12 @@ function letterTiles(tiles) {
 
         for (let [tile, available] of map.entries()) {
             if (available > 0) {
-                str += tile
+                // str += tile
                 map.set(tile, map.get(tile) - 1)
 
                 helper()
 
-                str.slice(0, -1)
+                // str.slice(0, -1)
                 map.set(tile, map.get(tile) + 1)
             }
         }
@@ -30,7 +30,6 @@ function letterTiles(tiles) {
     return count - 1
 }
 
-
 console.log(letterTiles("A"), 1)
 console.log(letterTiles("AB"), 4) 
 // -> "A", "B", "AB", "BA"
@@ -38,4 +37,4 @@ console.log(letterTiles("AAA"), 3)
 // -> "A", "AA", "AAA"
  console.log(letterTiles("AAB"), 8)
 // -> "A", "B", "AA", "AB", "BA", "AAB", "ABA", "BAA"
-console.log(letterTiles("AAABBC"), 188)
+// console.log(letterTiles("AAABBC"), 188)
