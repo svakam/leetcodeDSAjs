@@ -3,8 +3,13 @@ function subsetsLC(nums) {
 	generatePowerset([], 0);
 
 	function generatePowerset(path, index) {
+		// pushes concatenated elem from previous call in this call
 		powerset.push(path);
-		for (let i = index; i < nums.length; i++) {
+
+		// this loop includes base case AND recursive call
+		// base case: since i + 1 is passed into recursive call, recursion doesn't run when i = array length
+		// recursive: runs as long as i < array length
+		for (let i = index; i < nums.length; i++) { 
 			generatePowerset([...path, nums[i]], i + 1);
 		}
 	}
@@ -18,7 +23,7 @@ function subsetsLC2(nums) {
     
     function dfs(current, index){
         result.push(current);
-        for(let i = index; i < nums.length; i++) { // recursion to idx + 1 within iteration allows generating subsets 
+        for(let i = index; i < nums.length; i++) {
             dfs(current.concat(nums[i]), i + 1);
         }
     }
@@ -37,7 +42,6 @@ console.log(subsetsLC2([1,2,3]))
 console.log(subsetsLC2([1,2,3,4]))
 
 // [1,2,3]
-// powerset = [[],]
 // dfs([], 0)
 	// pushed []
 	// iterate i = 0
