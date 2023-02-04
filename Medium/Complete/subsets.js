@@ -27,11 +27,47 @@ function subsetsLC2(nums) {
 }
 
 let ans1 = [[],[1]]
-let ans2 = [[],[1],[2],[1,2]]
-let ans3 = [[],[1],[2],[1,2],[3],[1,3],[2,3],[1,2,3]]
-let ans4 = [[],[1],[2],[1,2],[3],[1,3],[2,3],[4],[1,4],[2,4],[3,4],[1,2,4],[1,3,4],[2,3,4],[1,2,3,4]]
+let ans2 = [[],[1],[1,2],[2]]
+let ans3 = [[],[1],[1,2],[1,3],[1,3],[2,3],[1,2,3]]
+// let ans4 = [[],[1],[2],[1,2],[3],[1,3],[2,3],[4],[1,4],[2,4],[3,4],[1,2,4],[1,3,4],[2,3,4],[1,2,3,4]]
 
 console.log(subsetsLC2([1]))
 console.log(subsetsLC2([1,2]))
 console.log(subsetsLC2([1,2,3]))
 console.log(subsetsLC2([1,2,3,4]))
+
+// [1,2,3]
+// powerset = [[],]
+// dfs([], 0)
+	// pushed []
+	// iterate i = 0
+	// dfs([1], i + 1)
+		// pushed [1]
+		// iterate i = 1
+		// dfs([1,2], i + 1)
+			// pushed [1,2]
+			// iterate i = 2
+				// dfs([1,2,3], i + 1)
+					// pushed [1,2,3]
+					// iterate i = 3 (loop doesn't run), thus recursion stops
+			// loop stops
+		// i = 2
+		// dfs([1,3], i + 1)
+			// pushed [1,3]
+			// iterate i = 3 (loop doesn't run)
+		// loop stops
+	// i = 1
+	// dfs([2], i + 1)
+		// pushed [2]
+		// iterate i = 2
+		// dfs([2,3], i + 1)
+			// pushed [2,3]
+			// iterate i = 3, loop doesn't run
+		// loop stops
+	// i = 2
+	// dfs([3], i + 1)
+		// pushed [3]
+		// iterate i = 3, loop doesn't run
+	// loop stops
+// return [[],[1],[1,2],[1,2,3],[1,3],[2],[2,3],[3]]
+					
