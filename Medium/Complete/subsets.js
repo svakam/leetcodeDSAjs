@@ -9,6 +9,7 @@ function subsetsLC(nums) {
 		// this loop includes base case AND recursive call
 		// base case: since i + 1 is passed into recursive call, recursion doesn't run when i = array length
 		// recursive: runs as long as i < array length
+		// unique subsets created since loop starts from passed-in index
 		for (let i = index; i < nums.length; i++) { 
 			generatePowerset([...path, nums[i]], i + 1);
 		}
