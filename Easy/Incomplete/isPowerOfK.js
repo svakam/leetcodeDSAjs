@@ -1,0 +1,1 @@
+// determine if a number n is a power of some other number k; n = 9 and k = 3, return true (3^2 = 9)

@@ -20,7 +20,7 @@ function arrayToBST(arr) {
       return root;
     } 
   
-    return helper(0, arr.length);
+    return helper(0, arr.length);   
   }
 
 // assume sorted arr
