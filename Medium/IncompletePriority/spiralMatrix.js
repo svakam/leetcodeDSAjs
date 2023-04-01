@@ -3,27 +3,27 @@ function spiral(m) {
     let row = 0, col = 0
     let top = 0, left = 0, right = m[0].length - 1, bottom = m.length - 1
 
-    while (top <= bottom && left <= right) {
+    while (top < bottom && left < right) {
         // traverse top
-        for (let col = left; col <= right; col++) {
+        for (let col = left; col < right; col++) {
             push(row, col)
         }
         top++
 
         // traverse right
-        for (let row = top; row <= bottom; row++) {
+        for (let row = top; row < bottom; row++) {
             push(row, col)
         }
         right--
 
         // traverse bottom
-        for (let col = right; col >= left; col--) {
+        for (let col = right - 1; col >= left; col--) {
             push(row, col)
         }
         bottom--
 
         // traverse left
-        for (let row = bottom; row >= top; row--) {
+        for (let row = bottom - 1; row >= top; row--) {
             push(row, col)
         }
         left++
