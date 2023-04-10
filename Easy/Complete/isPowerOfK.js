@@ -1,7 +1,7 @@
 // determine if a number n is a power of some other number k without using built in library; n = 27 and k = 3, return true (3^3 = 27)
 
 function isPowerOfK(n, k) {
-    if (k === 1 && n === 1) return true
+    if (k === 1 && n === 1 || k === n) return true
     if (k === 1 && n > 1) return false
     while (n > 1 && n % k === 0) {
         n /= k
@@ -23,4 +23,3 @@ console.log(isPowerOfK(5, 2), false)
 console.log(isPowerOfK(10, 2), false)
 console.log(isPowerOfK(1, 1), true)
 console.log(isPowerOfK(10, 1), false)
-console.log(isPowerOfK(1, 1), false)
