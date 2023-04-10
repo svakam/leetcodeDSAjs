@@ -9,26 +9,29 @@ class Node {
 function sum(tree) {
     if (!tree) return null
 
-    let q = [tree], deepest_row_sum = 0
+    let q = [tree], lastLevel, deepestSum = 0
 
-    while (q > 0) {
-        let n = q.length, curr_row_sum = 0
-        while (n > 0) {
-            let temp = q.shift()
-            console.log(q)
-            console.log(temp)
-            curr_row_sum += temp.val
+    while (q.length) {
+        let levelProcessed = q.length
 
-            if (temp.left) q.push(temp.left)
-            if (temp.right) q.push(temp.right)
-            n--
+        lastLevel = [...q]
+        while (levelProcessed) {
+            let node = q.shift()
+            if (node.left) q.push(node.left)
+            if (node.right) q.push(node.right)
+            levelProcessed--
         }
-        deepest_row_sum = curr_row_sum
     }
-    
-    console.log(deepest_row_sum)
-    return deepest_row_sum
+    for (const node of lastLevel) {
+        deepestSum += node.val
+    }
+
+    return deepestSum
 }
+
+//        1
+//     2     4    
+//   3
 
 let tree1 = null
 let tree2 = new Node(1)
