@@ -44,12 +44,12 @@ function longestPalindromeBT(str) {
     return str.substring(longestPalin[0], longestPalin[1] + 1)
 }
 
-// console.log(longestPalindromeBT("racecar"), "racecar")
-console.log(longestPalindromeBT("abcbq"), "bcb")
-// console.log(longestPalindromeBT("absqwerttrewqhf"), "qwerttrewq")
-// console.log(longestPalindromeBT("hellool"), "lool")
-// console.log(longestPalindromeBT("a"), "a")
-// console.log(longestPalindromeBT("abcdeqfqeqdcbacba"), "eqfqe")
+console.log(longestPalindromeBF("racecar"), "racecar")
+console.log(longestPalindromeBF("abcbq"), "bcb")
+console.log(longestPalindromeBF("absqwerttrewqhf"), "qwerttrewq")
+console.log(longestPalindromeBF("hellool"), "lool")
+console.log(longestPalindromeBF("a"), "a")
+console.log(longestPalindromeBF("abcdeqfqeqdcbacba"), "eqfqe")
 
 // hellool
 //    c  e    

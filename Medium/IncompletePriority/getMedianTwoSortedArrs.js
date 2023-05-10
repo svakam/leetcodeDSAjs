@@ -1,7 +1,7 @@
 // find the median of two sorted arrays
 
 function getMedianTwoSortedArrs(arr1, arr2) {
-
+    
 }
 
 

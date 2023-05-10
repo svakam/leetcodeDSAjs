@@ -42,45 +42,33 @@ function insertionSort(arr) {
 }
 
 // merge sort: recursively split arrays until 1 piece each, sort each half and rejoin them 
-function mergeSort(arr) {
-    const helperArr = []
-
-    function helper(arr, helperArr, low, mid, high) {
-        for (let i = low; i <= high; i++) {
-            helperArr[i] = arr[i]
-        }
-        let helperLeft = low, outputIdx = low, helperRight = mid + 1
-
-        while (helperLeft <= mid && helperRight <= high) {
-            if (helperArr[helperLeft] <= helperArr[helperRight]) {
-                arr[outputIdx] = helperArr[helperLeft]
-                helperLeft++
-            } else {
-                arr[outputIdx] = helperArr[helperRight]
-                helperRight++
-            }
-            outputIdx++
-        }
-
-        let remaining = mid - helperLeft
-        for (let i = 0; i <= remaining; i++) {
-            arr[outputIdx + i] = helperArr[helperLeft + i]
-        }
-    }
+function solution(array) {
+    if (array.length <= 1) return array
     
-    function merge(arr, helperArr, low, high) {
-        if (low < high) {
-            let mid = Math.floor((low + high) / 2)
-            merge(arr, helperArr, 0, mid)
-            merge(arr, helperArr, mid + 1, high)
-            helper(arr, helperArr, 0, mid, high)
+    let mid = Math.floor(array.length / 2)
+    
+    let left = solution(array.slice(0, mid))
+    let right = solution(array.slice(mid))
+    
+    return merge(left, right)
+    
+    function merge(left, right) {
+        let sorted = []
+        
+        while (left.length && right.length) {
+            if (left[0] < right[0]) {
+                sorted.push(left.shift())
+            }
+            else {
+                sorted.push(right.shift())
+            }
         }
+        
+        return [...sorted, ...left, ...right]
     }
 
-    merge(arr, helperArr, 0, arr.length - 1)
-
-    return arr
 }
+
 
 function swap(arr, i, j) {
     let temp = arr[i]
