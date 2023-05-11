@@ -18,7 +18,12 @@ console.log(containsDuplicate([1,2,3,1], 3, 0), true)
 console.log(containsDuplicate([1,5,9,1,5,9], 2, 3), false)
 
 // Approach 1: sliding window holds the newest k elements
-// 
+// k = 3, t = 0
+// [1,2,3,1]
+// i = 1 -> 3
+// j = max(1 - 3, 0) = 0 -> 1
+// Math.abs(2- 2) <= 0
+
 
 // sorting: 
 // time: O(nlog(k)), for k elements, space: 
