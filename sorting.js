@@ -13,13 +13,13 @@ function bubbleSort(arr) {
 // selection sort: select the smallest index within every iteration and swap it to the back
 function selectionSort(arr) {
     for (let i = 0; i < arr.length - 1; i++) {
-        let smallestIdx
+        let smallestIdx = i
         for (let j = i + 1; j < arr.length; j++) {
             if (arr[j] < arr[i]) {
                 smallestIdx = j
             }
-            if (smallestIdx) swap(arr, i, j)
         }
+        swap(arr, i, smallestIdx)
     }
     return arr
 }

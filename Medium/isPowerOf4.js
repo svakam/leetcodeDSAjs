@@ -1,0 +1,1 @@
+// given an integer, determine if it is a power of 4 without using built-in functions or operators
