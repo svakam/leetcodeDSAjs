@@ -5,7 +5,7 @@
 // in constant extra space
 
 // 7 approaches: SSNHBBF
-// single social nuisances have b
+// single secular nuns hold beliefs beyond foolishness
 // sort, set, negative, hashmap, bit, binary, floyd
 
 // approach 1: sort 
@@ -49,10 +49,11 @@ function findDuplicateNegativeMarking(nums) {
 }
 
 // approach 4: hashmap iterative and recursive
-// since elements are in [1,n], there is no 0 for index 0, thus use in swapping to swap elems to correct index until duplicate found (nums[0] == nums[nums[0]])
+// since elements are in [1,n], there is no 0 for index 0, thus use in swapping to swap elems to 
+// correct index until duplicate found (nums[0] == nums[nums[0]])
 // use the array as a hashmap
 function findDuplicateHMI(nums) {
-    while (nums[0] !== nums[nums[0]]) {
+    while (nums[0] !== nums[nums[0]]) { // while loop runs as long as there are no duplicates between what's at nums[0] and nums[nums[0]]
         // swap
         let next = nums[nums[0]]
         nums[nums[0]] = nums[0]
@@ -60,6 +61,10 @@ function findDuplicateHMI(nums) {
     }
     return nums[0]
 }
+// [1,5] = [1,2,3,4,5]
+// [2,1,2,3,4]
+// nums[0] = 3  nums[nums[0]] = 4 
+// next = nums[nums[0]] = 4
 
 function findDuplicateHMR(nums) {
     function store(curr) {
@@ -74,12 +79,15 @@ function findDuplicateHMR(nums) {
     return store(nums[0])
 }
 
-// approach 5: 
+// approach 5: binary search
+
+// approach 6: bitwise
+
+// approach 7: cycle detection
+// f(x) = nums[x] -> x, nums[x], nums[nums[x]], nums[nums[nums[x]]], ...
+// if x = nums[0] and a duplicate exists in the array, nums[a] = nums[b] = c, c is the value of the duplicate and it's contained at indices a and b
+// [2,6,4,1,3,1,5]
 
 
 console.log(findDuplicate([1,3,4,2,2]), 2)
 console.log(findDuplicate([3,1,3,4,2]), 3)
-
-// pigeonhole: at least one of the pigeonholes will have 2+ pigeons
-
-// sort
