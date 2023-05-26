@@ -7,35 +7,35 @@ class Node {
   }
 
 function treeFold(root) {
-    function reverse(root) {
-      if (!root) return
-      [root.left, root.right] = [root.right, root.left]
-      reverse(root.left)
-      reverse(root.right)
-    }
-  
-    function combine(left, right) {
-      if (left) {
-        left.val += right ? right.val :  0
-  
-        combine(left.left, right ? right.right : null)
-        combine(left.right, right ? right.left : null)
-        return left
-      }
-      if (right) {
-        // no left! Need to reverse the right and return that as the left.
-        reverse(right)
-        return right
-      }
-    }
-  
-    if (root) {
-      root.left = combine(root.left, root.right)
-      root.right = null
-    }
-  
-    return root
+  function reverse(root) {
+    if (!root) return
+    [root.left, root.right] = [root.right, root.left]
+    reverse(root.left)
+    reverse(root.right)
   }
+
+  function combine(left, right) {
+    if (left) {
+      left.val += right ? right.val :  0
+
+      combine(left.left, right ? right.right : null)
+      combine(left.right, right ? right.left : null)
+      return left
+    }
+    if (right) {
+      // no left! Need to reverse the right and return that as the left.
+      reverse(right)
+      return right
+    }
+  }
+
+  if (root) {
+    root.left = combine(root.left, root.right)
+    root.right = null
+  }
+
+  return root
+}
 
 const complete = new TreeNode(1, 
         new TreeNode(2, 

@@ -25,7 +25,10 @@ function findMissing(arr) {
 }
 
 
-
+// [b,e]
+// difference/range = e - b
+// inclusive = difference + 1
+// exclusive = difference - 1
 // [1,8] = 1,2,3,4,5,6,7,8
 let loss = [1,1,3,4,5,6,7,8]
 console.log(findMissing(loss), 2)

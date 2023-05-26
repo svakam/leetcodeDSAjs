@@ -18,11 +18,12 @@ function getSumLL(ll1, ll2) {
     if (!ll1 && !ll2) return null
     if (ll1 && !ll2) return ll1
     if (ll2 && !ll1) return ll2
-    let curr1 = ll1, curr2 = ll2, sentinel = new Node(), curr3 = sentinel
-    let carry = false
 
-    let placeSum = 0
+    let curr1 = ll1, curr2 = ll2, sentinel = new Node(), curr3 = sentinel
+    
+    let carry = false, placeSum = 0
     while (curr1 && curr2) {
+        // calculate current place's sum; if need to carry, set place to sum modulo 10 and carry 1 over to add to next placesum
         placeSum = curr1.val + curr2.val
         if (carry) {
             placeSum += 1
@@ -32,20 +33,29 @@ function getSumLL(ll1, ll2) {
             carry = true
             placeSum %= 10
         }
+
+        // move all pointers
         curr3.next = new Node(placeSum)
         curr1 = curr1.next
         curr2 = curr2.next
         curr3 = curr3.next
     }
+
+    // if both numbers ran out of digits at the same time
     if (!curr1 && !curr2) {
         if (carry) curr3.next = new Node(1)
         return sentinel.next
     } 
+    // if one of the numbers ran out of digits before
     else if (!curr1) {
         while (curr2) {
             if (carry) {
-                placeSum = curr2.val + 1
+                placeSum += 1
                 carry = false
+            }
+            if (placeSum > 9) {
+                carry = true
+                placeSum %= 10
             }
             curr3.next = new Node(placeSum)
             curr2 = curr2.next
@@ -54,10 +64,13 @@ function getSumLL(ll1, ll2) {
     } else {
         while (curr1) {
             if (carry) {
-                placeSum = curr1.val + 1
+                placeSum += 1
                 carry = false
             }
-            placeSum += curr1.val
+            if (placeSum > 9) {
+                carry = true
+                placeSum %= 10
+            }
             curr3.next = new Node(placeSum)
             curr1 = curr1.next
             curr3 = curr3.next
