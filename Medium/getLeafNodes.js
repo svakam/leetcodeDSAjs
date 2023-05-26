@@ -36,11 +36,13 @@ function getLeafNodes(root) {
 
         let left = helper(node.left), right = helper(node.right), level
         
-        // if both children are null, we have reached leaf: push value at output[0]
         if (left < 0 && right < 0) {
+            // if both children are null, we have reached leaf: push value at output[0]
             level = 0
         } else {
-            level = Math.max(left, right) + 1
+            // at any node, we want its correct level; the only way to know this is after its left and right are traversed to find
+            // which level this node is at and should be pushed to; it will be the max of left and right's level + 1
+            level = Math.max(left, right) + 1 
         }
         output[level] ? output[level].push(node.val) : output.push([node.val])
         return level
