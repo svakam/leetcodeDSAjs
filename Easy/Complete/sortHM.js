@@ -8,6 +8,7 @@ function sortHM(str) {
     }
 
     // sort hashmap
+    // https://bobbyhadz.com/blog/javascript-sort-keys-in-map
     // const sortedAsc = new Map([...map].sort((a, b) => a[1] - b[1]))
     const sortedDesc = new Map([...map].sort((a, b) => b[1] - a[1])) 
     // creates array of entries, sorts by entry[1] (value), b - a sorts descending
