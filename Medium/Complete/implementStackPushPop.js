@@ -11,7 +11,7 @@ class FreqStack {
       this.element_to_freq[val] = newFreq
       if (newFreq > this.maxFreq) this.maxFreq = newFreq
       if (this.frequency_to_elements[newFreq]) {
-        this.frequency_to_elements[newFreq].push(val)  
+        this.frequency_to_elements[newFreq].push(val)
       } else {
         this.frequency_to_elements[newFreq] = [val]
       }
