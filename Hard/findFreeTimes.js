@@ -70,41 +70,73 @@ Brainstorm:
 */
 
 var schedules  = {
-    'Alice': [[8, 10], [13, 14]] ,
-    'Bob': [[9, 11], [14, 15]] ,
-    'Jack': [ [8,11] ]
-  }
+    'Alice': [[8, 10], [13, 14]],
+    'Bob': [[9, 11], [14, 15]],
+    'Jack': [[8,11]]
+}
   
-  console.log(find_available_slots(schedules, 2)) // expects [[11,13],[15,17]]
   
-  // [10,12],[11,13],[14,16],[15,17]
+  // [10,12],[11,13],[14,16],[15,17],[12,14],[15,17],[13,15]
   
-  function find_available_slots(map_busy_schedules, min_duration) {
+function find_available_slots(map_busy_schedules, min_duration) {
     //make sure min duration > 9
-    if(min_duration > 8) return []
+    if(min_duration > 8 || min_duration < 1) return []
+
+    const all_busy_times = []
+    // retrieve just arrays; names irrelevant
+    for (const person_busy_times in schedules) {
+        all_busy_times.push(schedules[person_busy_times])
+    }
+    // console.log(all_busy_times)
+
     // - get available times for each individual
     const freeTimes = new Set()
-    for (const person_times of map_busy_schedules.values()) { //add in index instead of hard coding 0,0
-      // compare first availability to day start
-      if (person_times[0][0] > 8) {
-        freeTimes.add([8, person_times[0][0]])
-      }
-      //assume theres at least 2 tiems - make check 
-      for (let i = 1; i < person_times.length; i++) {
-        let freeTime = [person_times[i - 1][1], person_times[i][0]]
-        if (freeTime === min_duration) {
-          freeTimes.add(freeTime)
-        } else if (freeTime > min_duration) {
-          let max = person_times[i - 1][1] + min_duration
-          while (max <= person_times[i][0]) {
-            freeTimes.add(person_times[i - 1][1], max)
-            max++
-          }
+    for (const person_busy_times in all_busy_times) { //add in index instead of hard coding 0,0
+        // compare first availability to day start
+        if (person_busy_times[0][0] > 8 && person_busy_times[0][0] - 8 >= min_duration) {
+            let min = 8, max = min + min_duration
+            while (max <= person_busy_times[0][0]) {
+                if (!freeTimes.has(min, max)) {
+                    freeTimes.add(min, max)
+                }
+                min++
+                max++
+            }
+            freeTimes.add([8, person_busy_times[0][0]])
         }
-      }
-      // check for free time until EOD
-      if(person_times[person_times.length-1][1] < 17){
-        freeTimes.add([person_times[person_times.length-1][1],17])
-      }
+        console.log(freeTimes)
+        //assume theres at least 2 tiems - make check 
+        for (let i = 1; i < person_busy_times.length; i++) {
+            let freeTime = [person_busy_times[i - 1][1], person_busy_times[i][0]]
+            if (freeTime === min_duration) {
+                freeTimes.add(freeTime)
+            } else if (freeTime > min_duration) {
+                let max = person_busy_times[i - 1][1] + min_duration
+                while (max <= person_busy_times[i][0]) {
+                    let min = person_busy_times[i - 1][1]
+                    if (!freeTimes.has(min, max)) {
+                        freeTimes.add(min, max)
+                    }
+                    min++
+                    max++
+                }
+            }
+        }
+        // check for free time until EOD
+        if(person_busy_times[person_busy_times.length - 1][1] < 17){
+            let max = person_busy_times[person_busy_times.length - 1][1] + min_duration
+            while (max <= person_busy_times[i][0]) {
+                let min = person_busy_times[i - 1][1]
+                if (!freeTimes.has(min, max)) {
+                    freeTimes.add(min, max)
+                }
+                min++
+                max++
+            }
+        }
     }
-  }
+
+    return freeTimes
+}
+
+console.log(find_available_slots(schedules, 2)) // expects [[11,13],[15,17]]
