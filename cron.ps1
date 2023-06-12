@@ -7,15 +7,40 @@
 # Customize: Options parameter
 
 $taskName = "LeetcodeJSDailyUpdate"
+$repoPath = (Get-Location).ToString()
+
+# README.md: refreshes files for each category, sorts alphabetically
+function Update-LC-Readme {
+    
+}
+
+# LastModified.md: 
+    # at start of new week, creates new header "# Week of Monday, <Date>"
+    # runs through full file list and adds to header by file's last modified date
+    # this helps me keep track of most recent problems reviewed for better review
+    # last possible date variable will be kept track 
+function Update-LastModified {
+    
+}
+
+# add change log to change log file
+function Update-LC-ChangeLog {
+    
+}
+
+function Update-Leetcode-Files {
+
+    Update-LC-Readme
+    Update-LC-LastModified
+    Update-LC-ChangeLog
+}
 
 # registers new job with trigger 12pm daily, script block specified below
 function Register-LeetcodeJob {
     $T = New-JobTrigger -Daily -At "12:00 PM"
     Write-Output $T
-    $path = (Get-Location).ToString()
-    Write-Output "Script path: $path"
     Register-ScheduledJob -Name $taskName -Trigger $T -ScriptBlock {
-        # 
+        Update 
     }
     $job = Get-ScheduledJob -Name $taskName
     if (!$job) { 
@@ -28,28 +53,15 @@ function Register-LeetcodeJob {
 $taskExists = Get-ScheduledTask | Where-Object { $_.TaskName -like $taskName }
 if (!$taskExists) {
     Register-LeetcodeJob
-} else {
+}
 
+try {
     $leetcodeJob = Get-ScheduledJob -Name $taskName
-    $jobName = $leetcodeJob.Name
-    
-
+    $leetcodeJob.Name
     exit 0
+}
+catch {
+    "Job does not exist $_"
 }
 
 
-
-# README.md: refreshes files for each category, sorts alphabetically
-
-
-
-
-
-
-# LastModified.md: 
-# at start of new week, creates new header "# Week of Monday, <Date>"
-# runs through full file list and adds to header by file's last modified date
-# this helps me keep track of most recent problems reviewed for better review
-# last possible date variable will be kept track of
-
-# add change log to change log file
