@@ -23,45 +23,56 @@ function Update-LastModified {
     
 }
 
-# add change log to change log file
+# add change log to change log file:
+    # search for change log file
+    # if not exists, create new file
+    # search for headers
+    # add text with timestamp
 function Update-LC-ChangeLog {
-    
+    Write-Output "path: $repoPath"
+
+    Get-ChildItem -Path "$repoPath" | ForEach-Object { 
+        Write-Host $_
+    }
+
+
 }
 
 function Update-Leetcode-Files {
-
     Update-LC-Readme
     Update-LC-LastModified
     Update-LC-ChangeLog
 }
 
 # registers new job with trigger 12pm daily, script block specified below
-function Register-LeetcodeJob {
-    $T = New-JobTrigger -Daily -At "12:00 PM"
-    Write-Output $T
-    Register-ScheduledJob -Name $taskName -Trigger $T -ScriptBlock {
-        Update 
-    }
-    $job = Get-ScheduledJob -Name $taskName
-    if (!$job) { 
-        throw "Job was unable to register."
-    }
-    Write-Host "Registered new Leetcode job."
-}
+#function Register-LeetcodeJob {
+#    $T = New-JobTrigger -Daily -At "12:00 PM"
+#    Write-Output $T
+#    Register-ScheduledJob -Name $taskName -Trigger $T -ScriptBlock {
+#        Update-Leetcode-Files
+#    }
+#    $job = Get-ScheduledJob -Name $taskName
+#    if (!$job) { 
+#        throw "Job was unable to register."
+#    }
+#    Write-Host "Registered new Leetcode job."
+#}
 
 # check for existing job on local system: if doesn't exist, register it
-$taskExists = Get-ScheduledTask | Where-Object { $_.TaskName -like $taskName }
-if (!$taskExists) {
-    Register-LeetcodeJob
-}
+#$taskExists = Get-ScheduledTask | Where-Object { $_.TaskName -like $taskName }
+#if (!$taskExists) {
+#    Register-LeetcodeJob
+#}
 
-try {
-    $leetcodeJob = Get-ScheduledJob -Name $taskName
-    $leetcodeJob.Name
-    exit 0
-}
-catch {
-    "Job does not exist $_"
-}
+Update-LC-ChangeLog
+
+#try {
+#    $leetcodeJob = Get-ScheduledJob -Name $taskName
+#    $leetcodeJob.Name
+#    exit 0
+#}
+#catch {
+#    "Job does not exist $_"
+#}
 
 
