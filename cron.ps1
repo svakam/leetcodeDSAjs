@@ -32,7 +32,15 @@ function Update-LC-ChangeLog {
     Write-Output "path: $repoPath"
 
     Get-ChildItem -Path "$repoPath" | ForEach-Object { 
-        Write-Host $_
+        if ($_.BaseName -eq "LastModified") {
+            Write-Host "Base name " $_.BaseName
+            Write-Host "Full name " $_.FullName
+            Write-Host "Last modified " $_.LastWriteTime
+            Write-Host $_.GetType()
+            # Add-Content $_.FullName "Test append"
+            Add-Content $_.FullName "`nMore append"
+        }
+        #$_.AppendText()
     }
 
 
