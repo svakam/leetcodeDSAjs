@@ -34,36 +34,59 @@ function Update-LC-ChangeLog {
 
 function Update-LC-LastModified {
     Write-Output "path: $repoPath"
+    $filePath
 
     # set to true if file was found and work was done
     $fileFound = $false
     $workDone = $false
-
+    
+    # find last modified file
     Get-ChildItem -Path "$repoPath" | ForEach-Object { 
-
         if ($_.BaseName -eq "LastModified") {
+            
             $fileFound = $true
-            # base name: $_.BaseName (file name)
-            # full name: $_.FullName (absolute path)
-            # last modified: $_.LastWriteTime
-            # append text: $_.FullName "<text>"
-            # append new line and text: $_.FullName "`n<text>"
-
-            (Get-Content -Path $_.FullName) | 
-                ForEach-Object {
-                    # do work on each line
-                    $_ -Replace "Last", "First"
-                } | Set-Content -Path $_.FullName
-            Get-Content -Path $_.FullName
+            $filePath = $_.FullName
             $workDone = $true
-        }
-        if ($fileFound -and $workDone) { 
-            Write-Output "File was found, work was done"
-            break
         }
     }
 
+    # checks
+    if (!$fileFound) {
+        Write-Host "File was not found."
+        break
+    }
+    else {
+        Write-Host "File was found. Path: " $filePath
 
+        # find most recent header
+        $mostRecentHeader
+        (Get-Content -Path $filePath) | 
+            ForEach-Object {
+                if ($_ -like "##*") {
+                    $mostRecentHeader = $_
+                    return
+                }
+                Write-Host $_
+            }
+        $mostRecentHeader
+        # extract date and check if it's been 7+ days since then
+        $date = Get-Date
+        $dateString = "Week of Sunday, " + $date.Month + "/" + $date.Day + "/" + $date.Year 
+        
+        Write-Host "hello"
+        # if start of new week, append new header between "# Last Modified" and the most recent last week header
+        (Get-Content -Path $filePath) |
+            ForEach-Object {
+                if ($_ -eq "# Last Modified") {
+                    $_ -Replace "# Last Modified", "# Last Modified`n`n## $dateString"
+                } else {
+                    $_
+                }
+            } | Set-Content -Path $filePath
+    }
+        
+    if (!$workDone) { Write-Host "Work could not be done." }
+    else { Write-Host "Work was completed." }
 }
 
 function Update-Leetcode-Files {
