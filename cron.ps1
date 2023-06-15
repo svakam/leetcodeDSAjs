@@ -71,7 +71,7 @@ function Update-LC-LastModified {
         $mostRecentHeader
         # extract date and check if it's been 7+ days since then
         $date = Get-Date
-        $dateString = "Week of Sunday, " + $date.Month + "/" + $date.Day + "/" + $date.Year 
+        $dateString = "Week of Sunday, " + $date.Month + "/" + $date.Day + "/" + $date.Year
         
         Write-Host "hello"
         # if start of new week, append new header between "# Last Modified" and the most recent last week header
