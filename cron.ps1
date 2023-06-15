@@ -14,47 +14,51 @@ function Update-LC-Readme {
     
 }
 
-# LastModified.md: 
-    # at start of new week, creates new header "# Week of Monday, <Date>"
-    # runs through full file list and adds to header by file's last modified date
-    # this helps me keep track of most recent problems reviewed for better review
-    # last possible date variable will be kept track 
-function Update-LastModified {
-    
-}
 
 # add change log to change log file:
     # search for change log file
     # if not exists, create new file
     # search for headers
     # add text with timestamp
+
 function Update-LC-ChangeLog {
-    # Write-Output "path: $repoPath"
+    
+}
+
+
+# LastModified.md: 
+    # at start of new week, creates new header "# Week of Monday, <Date>"
+    # runs through full file list and adds to header by file's last modified date
+    # this helps me keep track of most recent problems reviewed for better review
+    # last possible date variable will be kept track 
+
+function Update-LC-LastModified {
+    Write-Output "path: $repoPath"
+
+    # set to true if file was found and work was done
+    $fileFound = $false
+    $workDone = $false
 
     Get-ChildItem -Path "$repoPath" | ForEach-Object { 
-        # bool flag sest to true if file was found and work was done
-        $fileFound = $false
-        $workDone = $false
+
         if ($_.BaseName -eq "LastModified") {
             $fileFound = $true
-            # Write-Host "Base name " $_.BaseName
-            # Write-Host "Full name " $_.FullName
-            # Write-Host "Last modified " $_.LastWriteTime
-            # Write-Host $_.GetType()
-            # Add-Content $_.FullName "Test append"
-            # Add-Content $_.FullName "`nMore append"
+            # base name: $_.BaseName (file name)
+            # full name: $_.FullName (absolute path)
+            # last modified: $_.LastWriteTime
+            # append text: $_.FullName "<text>"
+            # append new line and text: $_.FullName "`n<text>"
 
-            # $contentArray = (Get-Content -Path $_.FullName)
-            # Write-Output "old content: " $contentArray
             (Get-Content -Path $_.FullName) | 
                 ForEach-Object {
+                    # do work on each line
                     $_ -Replace "Last", "First"
                 } | Set-Content -Path $_.FullName
             Get-Content -Path $_.FullName
             $workDone = $true
         }
         if ($fileFound -and $workDone) { 
-            Write-Output "File was found, work was done" 
+            Write-Output "File was found, work was done"
             break
         }
     }
@@ -88,7 +92,7 @@ function Update-Leetcode-Files {
 #    Register-LeetcodeJob
 #}
 
-Update-LC-ChangeLog
+Update-LC-LastModified
 
 #try {
 #    $leetcodeJob = Get-ScheduledJob -Name $taskName
