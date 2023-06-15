@@ -32,6 +32,21 @@ function Update-LC-ChangeLog {
     # this helps me keep track of most recent problems reviewed for better review
     # last possible date variable will be kept track 
 
+function Extract-Date {
+    param (
+        $MdHeader
+    )
+
+    $date = $MdHeader.Substring($MdHeader.IndexOf(", "))
+    $date = $date.Substring(2)
+    $month = $date.Substring(0, $date.IndexOf("/"))
+    $dateTrimmedMonth = $date.Substring($date.IndexOf("/") + 1)
+    $day = $dateTrimmedMonth.Substring(0, $dateTrimmedMonth.IndexOf("/"))
+    $year = $dateTrimmedMonth.Substring($date.IndexOf("/") + 2)
+
+    return Get-Date -Month $month -Day $day -Year $year -Hour 0 -Minute 0 -Second 0
+}
+
 function Update-LC-LastModified {
     Write-Output "path: $repoPath"
     $filePath
@@ -60,29 +75,31 @@ function Update-LC-LastModified {
 
         # find most recent header
         $mostRecentHeader
-        (Get-Content -Path $filePath) | 
-            ForEach-Object {
-                if ($_ -like "##*") {
-                    $mostRecentHeader = $_
-                    return
-                }
-                Write-Host $_
+        $content = (Get-Content -Path $filePath)
+        foreach ($line in $content) {
+            if ($line -like "##*") {
+                $line
+                $mostRecentHeader = $line
+                break
             }
-        $mostRecentHeader
+        }
+        Write-Output "most recent header: $mostRecentHeader"
+
         # extract date and check if it's been 7+ days since then
+        $extractedDate = Extract-Date -MdHeader $mostRecentHeader
+        Write-Output "extracted date: $extractedDate"
         $date = Get-Date
         $dateString = "Week of Sunday, " + $date.Month + "/" + $date.Day + "/" + $date.Year
         
-        Write-Host "hello"
         # if start of new week, append new header between "# Last Modified" and the most recent last week header
-        (Get-Content -Path $filePath) |
-            ForEach-Object {
-                if ($_ -eq "# Last Modified") {
-                    $_ -Replace "# Last Modified", "# Last Modified`n`n## $dateString"
-                } else {
-                    $_
-                }
-            } | Set-Content -Path $filePath
+        #(Get-Content -Path $filePath) |
+        #    ForEach-Object {
+        #        if ($_ -eq "# Last Modified") {
+        #            $_ -Replace "# Last Modified", "# Last Modified`n`n## $dateString"
+        #        } else {
+        #            $_
+        #        }
+        #    } | Set-Content -Path $filePath
     }
         
     if (!$workDone) { Write-Host "Work could not be done." }
