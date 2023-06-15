@@ -29,18 +29,34 @@ function Update-LastModified {
     # search for headers
     # add text with timestamp
 function Update-LC-ChangeLog {
-    Write-Output "path: $repoPath"
+    # Write-Output "path: $repoPath"
 
     Get-ChildItem -Path "$repoPath" | ForEach-Object { 
+        # bool flag sest to true if file was found and work was done
+        $fileFound = $false
+        $workDone = $false
         if ($_.BaseName -eq "LastModified") {
-            Write-Host "Base name " $_.BaseName
-            Write-Host "Full name " $_.FullName
-            Write-Host "Last modified " $_.LastWriteTime
-            Write-Host $_.GetType()
+            $fileFound = $true
+            # Write-Host "Base name " $_.BaseName
+            # Write-Host "Full name " $_.FullName
+            # Write-Host "Last modified " $_.LastWriteTime
+            # Write-Host $_.GetType()
             # Add-Content $_.FullName "Test append"
-            Add-Content $_.FullName "`nMore append"
+            # Add-Content $_.FullName "`nMore append"
+
+            # $contentArray = (Get-Content -Path $_.FullName)
+            # Write-Output "old content: " $contentArray
+            (Get-Content -Path $_.FullName) | 
+                ForEach-Object {
+                    $_ -Replace "Last", "First"
+                } | Set-Content -Path $_.FullName
+            Get-Content -Path $_.FullName
+            $workDone = $true
         }
-        #$_.AppendText()
+        if ($fileFound -and $workDone) { 
+            Write-Output "File was found, work was done" 
+            break
+        }
     }
 
 
