@@ -83,23 +83,25 @@ function Update-LC-LastModified {
                 break
             }
         }
-        Write-Output "most recent header: $mostRecentHeader"
+        Write-Output "Most recent header: $mostRecentHeader"
 
         # extract date and check if it's been 7+ days since then
         $extractedDate = Extract-Date -MdHeader $mostRecentHeader
         Write-Output "extracted date: $extractedDate"
         $date = Get-Date
         $dateString = "Week of Sunday, " + $date.Month + "/" + $date.Day + "/" + $date.Year
-        
-        # if start of new week, append new header between "# Last Modified" and the most recent last week header
-        #(Get-Content -Path $filePath) |
-        #    ForEach-Object {
-        #        if ($_ -eq "# Last Modified") {
-        #            $_ -Replace "# Last Modified", "# Last Modified`n`n## $dateString"
-        #        } else {
-        #            $_
-        #        }
-        #    } | Set-Content -Path $filePath
+        if ($extractedDate.Date.AddDays(7) -le $date.Date) {
+            Write-Host "Been 7 days since most recent header. Add new header"
+            # append new header between "# Last Modified" and the most recent last week header
+            (Get-Content -Path $filePath) |
+                ForEach-Object {
+                    if ($_ -eq "# Last Modified") {
+                        $_ -Replace "# Last Modified", "# Last Modified`n`n## $dateString"
+                    } else {
+                        $_
+                    }
+                } | Set-Content -Path $filePath
+        }
     }
         
     if (!$workDone) { Write-Host "Work could not be done." }
