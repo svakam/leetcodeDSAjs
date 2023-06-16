@@ -40,15 +40,24 @@ function Extract-Date {
         $MdHeader
     )
 
+    # extract just the date
     $date = $MdHeader.Substring($MdHeader.IndexOf(", "))
     $date = $date.Substring(2)
+    
+    # get date parts and return as final date obj
     $month = $date.Substring(0, $date.IndexOf("/"))
     $dateTrimmedMonth = $date.Substring($date.IndexOf("/") + 1)
     $day = $dateTrimmedMonth.Substring(0, $dateTrimmedMonth.IndexOf("/"))
-    $year = $dateTrimmedMonth.Substring($date.IndexOf("/") + 2)
+    $dateTrimmedDay = $dateTrimmedMonth.Substring($dateTrimmedMonth.IndexOf("/") + 1)
+    $year = $dateTrimmedDay
 
     return Get-Date -Month $month -Day $day -Year $year -Hour 0 -Minute 0 -Second 0 -Millisecond 0
 }
+
+# goal hashtable:
+# 06/18/2023 - [[f4.js, 06/19/2023 9am]]
+# 06/11/2023 - [[f3.js, 06/11/2023 6am],[f5.js, 06/13/2023 12pm]
+# 06/04/2023 - [[f1.js,06/05/2023 7:30am], [f2.js,06/07/2023 8:00am]
 
 function Add-Filenames-Headers {
     param (
@@ -66,20 +75,24 @@ function Add-Filenames-Headers {
         ForEach-Object {
             if ($_ -like "##*") {
                 $date = Extract-Date -MdHeader $_
-                $lastModTable.Add($date, $null)
+                $lastModTable.Add($date, "test")
             }
         }
 
+    $test = (Get-Date -Month 6 -Day 4 -Year 2023 -Hour 0 -Minute 0 -Second 0 -Millisecond 0)
+    $lastModTable.$test
+    $lastModTable
+
+    # recurse through all valid files
+        # for each file, get first sunday of its week
+        # if this exists in the table, add this file and its last modified date as an object to value collection
     #Write-Host ".git: " "$repoPath\.git"
     #(Get-ChildItem -Path $repoPath -Exclude "*.git") |
     #    Get-ChildItem -Recurse -File | ForEach-Object {
     #        Write-Output $_.BaseName $_.LastWriteTime
 #
- #       }
+#        }
 }
-# 06/18/2023 - [[f4.js, 06/19/2023 9am]]
-# 06/11/2023 - [[f3.js, 06/11/2023 6am]]
-# 06/04/2023 - [[f1.js,06/05/2023 7:30am], [f2.js,06/07/2023 8:00am]
 
 function Update-LC-LastModified {
     Write-Output "Repo path: $repoPath"
