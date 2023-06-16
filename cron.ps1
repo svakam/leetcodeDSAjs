@@ -59,6 +59,19 @@ function Extract-Date {
 # 06/11/2023 - [[f3.js, 06/11/2023 6am],[f5.js, 06/13/2023 12pm]
 # 06/04/2023 - [[f1.js,06/05/2023 7:30am], [f2.js,06/07/2023 8:00am]
 
+class File_ModDate {
+    [string]$FileName
+    [DateTime]$LastModified
+
+    File_ModDate(
+        [string]$fn,
+        [DateTime]$lm
+    ) {
+        $this.FileName = $fn
+        $this.LastModified = $lm
+    }
+}
+
 function Add-Filenames-Headers {
     param (
         $repoPath,
@@ -69,29 +82,52 @@ function Add-Filenames-Headers {
     Write-Host "Repo path: $repoPath"
     Write-Host "Last modified file path: $filePath"
 
-    $lastModTable = [ordered]@{}
     # add existing headers to a hashtable
+    $lastModTable = [ordered]@{}
+    $bl = Get-Date
+    $obja = [File_ModDate]::new(
+        "test",
+        $bl
+    )
     (Get-Content -Path $filePath) |
         ForEach-Object {
             if ($_ -like "##*") {
                 $date = Extract-Date -MdHeader $_
-                $lastModTable.Add($date, "test")
+                $lastModTable.Add($date, (New-Object System.Collections.Generic.List[File_ModDate]))
             }
         }
 
     $test = (Get-Date -Month 6 -Day 4 -Year 2023 -Hour 0 -Minute 0 -Second 0 -Millisecond 0)
-    $lastModTable.$test
+    #foreach ($key in $($lastModTable.keys)) {
+    #    $list = ($lastModTable[$key])
+    #    $list.Add($obja)
+    #    $lastModTable[$key] = $list
+    #}
     $lastModTable
 
     # recurse through all valid files
         # for each file, get first sunday of its week
-        # if this exists in the table, add this file and its last modified date as an object to value collection
-    #Write-Host ".git: " "$repoPath\.git"
-    #(Get-ChildItem -Path $repoPath -Exclude "*.git") |
-    #    Get-ChildItem -Recurse -File | ForEach-Object {
-    #        Write-Output $_.BaseName $_.LastWriteTime
-#
-#        }
+        # if this sunday exists in the table, add this file and its last modified date as an object to value collection
+    (Get-ChildItem -Path $repoPath -Exclude "*.git*","*.md","*.txt","Node*","*.ps1") |
+        Get-ChildItem -Recurse -File | ForEach-Object {
+            $lastWriteTime = $_.LastWriteTime
+            $firstSunday = $lastWriteTime.AddDays(-($lastWriteTime.DayOfWeek)) 
+            $firstSunZeroed = Get-Date -Date $firstSunday.Date -Hour 0 -Minute 0 -Second 0 -Millisecond 0
+            if (!$lastModTable.Contains($firstSunZeroed)) {
+                $lastModTable.Add($firstSunZeroed, (New-Object System.Collections.Generic.List[File_ModDate]))
+            } 
+            else {
+                # create object
+                $fileModDateObj = [File_ModDate]::new(
+                    $_.Name,
+                    $_.LastWriteTime
+                )
+                $list = $lastModTable[$firstSunZeroed]
+                $list.Add($fileModDateObj)
+                $lastModTable[$firstSunZeroed] = $list
+            }
+        }
+    $lastModTable
 }
 
 function Update-LC-LastModified {
