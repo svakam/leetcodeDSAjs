@@ -62,8 +62,14 @@ function Add-Filenames-Headers {
 
     Write-Host ".git: " "$repoPath\.git"
     (Get-ChildItem -Path $repoPath -Exclude "*.git") |
-        Get-ChildItem -Recurse
+        Get-ChildItem -Recurse -File | ForEach-Object {
+            Write-Output $_.BaseName $_.LastWriteTime
+
+        }
 }
+# 06/18/2023 - [[f4.js, 06/19/2023 9am]]
+# 06/11/2023 - [[f3.js, 06/11/2023 6am]]
+# 06/04/2023 - [[f1.js,06/05/2023 7:30am], [f2.js,06/07/2023 8:00am]
 
 function Update-LC-LastModified {
     Write-Output "Repo path: $repoPath"
