@@ -60,12 +60,27 @@ function Add-Filenames-Headers {
     Write-Host "Repo path: $repoPath"
     Write-Host "Last modified file path: $filePath"
 
-    Write-Host ".git: " "$repoPath\.git"
-    (Get-ChildItem -Path $repoPath -Exclude "*.git") |
-        Get-ChildItem -Recurse -File | ForEach-Object {
-            Write-Output $_.BaseName $_.LastWriteTime
 
+
+    $lastModTable = @{}
+    # add existing headers to hashtable
+    (Get-Content -Path $filePath) |
+        ForEach-Object {
+            if ($_ -like "##*") {
+                $date = Extract-Date -MdHeader $_
+                $date
+            }
         }
+
+    # $lastModTable.Add()
+
+
+    #Write-Host ".git: " "$repoPath\.git"
+    #(Get-ChildItem -Path $repoPath -Exclude "*.git") |
+    #    Get-ChildItem -Recurse -File | ForEach-Object {
+    #        Write-Output $_.BaseName $_.LastWriteTime
+#
+ #       }
 }
 # 06/18/2023 - [[f4.js, 06/19/2023 9am]]
 # 06/11/2023 - [[f3.js, 06/11/2023 6am]]
