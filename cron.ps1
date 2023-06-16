@@ -47,7 +47,7 @@ function Extract-Date {
     $day = $dateTrimmedMonth.Substring(0, $dateTrimmedMonth.IndexOf("/"))
     $year = $dateTrimmedMonth.Substring($date.IndexOf("/") + 2)
 
-    return Get-Date -Month $month -Day $day -Year $year -Hour 0 -Minute 0 -Second 0
+    return Get-Date -Month $month -Day $day -Year $year -Hour 0 -Minute 0 -Second 0 -Millisecond 0
 }
 
 function Add-Filenames-Headers {
@@ -60,20 +60,15 @@ function Add-Filenames-Headers {
     Write-Host "Repo path: $repoPath"
     Write-Host "Last modified file path: $filePath"
 
-
-
-    $lastModTable = @{}
-    # add existing headers to hashtable
+    $lastModTable = [ordered]@{}
+    # add existing headers to a hashtable
     (Get-Content -Path $filePath) |
         ForEach-Object {
             if ($_ -like "##*") {
                 $date = Extract-Date -MdHeader $_
-                $date
+                $lastModTable.Add($date, $null)
             }
         }
-
-    # $lastModTable.Add()
-
 
     #Write-Host ".git: " "$repoPath\.git"
     #(Get-ChildItem -Path $repoPath -Exclude "*.git") |
