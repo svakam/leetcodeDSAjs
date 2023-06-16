@@ -29,8 +29,11 @@ function Update-LC-ChangeLog {
 # LastModified.md: 
     # at start of new week, creates new header "# Week of Monday, <Date>"
     # runs through full file list and adds to header by file's last modified date
+        # iterate through headers encountered, add as key of dictionary
+        # iterate recursively through file list excluding non-coding problem files
+            # add file to a key if file's last modified is 
+            # stretch: file links? 
     # this helps me keep track of most recent problems reviewed for better review
-    # last possible date variable will be kept track 
 
 function Extract-Date {
     param (
@@ -47,8 +50,23 @@ function Extract-Date {
     return Get-Date -Month $month -Day $day -Year $year -Hour 0 -Minute 0 -Second 0
 }
 
+function Add-Filenames-Headers {
+    param (
+        $repoPath,
+        $filePath
+    )
+
+    Write-Host "Adding file names to headers."
+    Write-Host "Repo path: $repoPath"
+    Write-Host "Last modified file path: $filePath"
+
+    Write-Host ".git: " "$repoPath\.git"
+    (Get-ChildItem -Path $repoPath -Exclude "*.git") |
+        Get-ChildItem -Recurse
+}
+
 function Update-LC-LastModified {
-    Write-Output "path: $repoPath"
+    Write-Output "Repo path: $repoPath"
     $filePath
 
     # set to true if file was found and work was done
@@ -83,11 +101,11 @@ function Update-LC-LastModified {
                 break
             }
         }
-        Write-Output "Most recent header: $mostRecentHeader"
+        Write-Host "Most recent header: $mostRecentHeader"
 
         # extract date and check if it's been 7+ days since then
         $extractedDate = Extract-Date -MdHeader $mostRecentHeader
-        Write-Output "extracted date: $extractedDate"
+        Write-Host "Extracted date: $extractedDate"
         $date = Get-Date
         $dateString = "Week of Sunday, " + $date.Month + "/" + $date.Day + "/" + $date.Year
         if ($extractedDate.Date.AddDays(7) -le $date.Date) {
@@ -101,7 +119,11 @@ function Update-LC-LastModified {
                         $_
                     }
                 } | Set-Content -Path $filePath
+        } else {
+            Write-Host "Still within last header's week. Don't append new header"
         }
+
+        Add-FileNames-Headers -RepoPath $repoPath -FilePath $filePath
     }
         
     if (!$workDone) { Write-Host "Work could not be done." }
