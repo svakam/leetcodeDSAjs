@@ -128,6 +128,7 @@ function Add-Filenames-Headers {
             }
         }
     $lastModTable
+    Write-Output "last mod table"
 }
 
 function Update-LC-LastModified {
