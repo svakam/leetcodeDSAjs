@@ -6,9 +6,9 @@
 # Add job trigger/s: Trigger parameter 
 # Customize: Options parameter
 
-# import the Read-Date function, which extracts a date from a markdown header containing a date
-Import-Module .\Scripts\Read-Date.psm1
-Import-Module .\Scripts\Add-FilenamesHeaders.psm1
+# import modules and other scripts
+Import-Module .\Scripts\Read-Date.psm1 # import the Read-Date function, which extracts a date from a markdown header containing a date
+. .\Scripts\Add-FilenamesToHeaders.ps1 # dot-source the function that adds file names to headers
 
 # registers new job with trigger 12pm daily, script block specified below
 function Register-LeetcodeJob {
@@ -123,7 +123,7 @@ function Update-LC-LastModified {
         }
         $dateString = "Week of Sunday, " + $date.Month + "/" + $date.Day + "/" + $date.Year # set a new date string with this Sunday's parameters (month, day, year)
 
-        # directly compare extracted date to today's date; if it's within 7 days, don't add new header to file, or add one with this week's header from Sunday
+        # directly compare extracted date to this week's Sunday; if it's within 7 days, don't add new header to file, else add this week's Sunday as new header
         if ($extractedDate.Date.AddDays(7) -le $date.Date) {
             Write-Host "Been 7 days since most recent header. Add new header"
 
@@ -133,14 +133,15 @@ function Update-LC-LastModified {
                     if ($_ -eq "# Last Modified") {
                         $_ -Replace "# Last Modified", "# Last Modified`n`n## $dateString"
                     } else {
-                        $_
+                        $_ # this somehow allows the remaining content to exist, since we're piping the content back into Set-Content after checking for additions
                     }
-                } | Set-Content -Path $filePath
+                } | Set-Content -Path $filePath # re-write content of file with added header
         } else {
             Write-Host "Still within last header's week. Don't append new header"
         }
 
-        Add-FileNamesHeaders -RepoPath $repoPath -FilePath $filePath
+        # add file names under appropriate headers
+        Add-FileNamesToHeaders -RepoPath $repoPath -FilePath $filePath 
     }
         
     if (!$workDone) { Write-Host "Work could not be done." }

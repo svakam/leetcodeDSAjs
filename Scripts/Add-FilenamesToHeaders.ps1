@@ -9,7 +9,7 @@ class File_ModDate {
     }
 }
 
-function Add-FilenamesHeaders {
+function Add-FilenamesToHeaders {
     param (
         $repoPath,
         $filePath
@@ -17,6 +17,7 @@ function Add-FilenamesHeaders {
 
     Write-Host "Adding file names to headers."
     Write-Host "Repo path: $repoPath"
+    Write-Host "Test after modifying module"
     Write-Host "Last modified file path: $filePath"
 
     # add existing headers to a hashtable
