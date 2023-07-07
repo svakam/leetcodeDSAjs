@@ -1,9 +1,5 @@
 # Last Modified
 
-## Week of Sunday, 7/2/2023
-
-0, last modified at 07/06/2023 13:52:21
-
 ## Week of Sunday, 6/4/2023
 
 maxPathSum.js, last modified at 06/10/2023 16:48:14
@@ -15,6 +11,8 @@ reverseLLbyK.js, last modified at 06/10/2023 18:25:43
 ## Week of Sunday, 5/28/2023
 
 findFreeTimes.js, last modified at 05/30/2023 22:13:30
+
+kNearestNeighbors.js, last modified at 05/31/2023 17:44:11
 
 ## Week of Sunday, 5/21/2023
 
@@ -74,8 +72,6 @@ sorting.js, last modified at 05/14/2023 16:14:30
 
 ## Week of Sunday, 5/7/2023
 
-sumMatrixDiagonal.js, last modified at 05/10/2023 17:34:26
-
 containsDuplicate.js, last modified at 05/10/2023 17:20:10
 
 LFUcache.js, last modified at 05/07/2023 17:10:46
@@ -117,6 +113,8 @@ tripletsSumZero.js, last modified at 03/31/2023 21:54:01
 spiralMatrix.js, last modified at 04/01/2023 14:42:35
 
 ## Week of Sunday, 3/19/2023
+
+2Dpractice.js, last modified at 03/22/2023 15:35:31
 
 idxOfFirstOccTargetStr.js, last modified at 03/24/2023 20:44:17
 
