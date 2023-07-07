@@ -57,7 +57,7 @@ function Add-FilenamesToHeaders {
                 $relativePath = $fullPath.Substring($fullPath.IndexOf("leetcodeDSAjs"))
                 $relativePath = $relativePath.Substring($relativePath.IndexOf("\") + 1);
                 $category = $relativePath.Substring(0, $relativePath.IndexOf("\"))
-                $relativePath = ".\$($relativePath)"
+                $relativePath = $relativePath -replace "\\", "/"
                 $category
                 
                 # create object
