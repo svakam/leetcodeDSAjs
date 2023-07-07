@@ -1,9 +1,9 @@
 ﻿# import modules and other scripts
-Import-Module .\Scripts\Read-Date.psm1 # import the Read-Date function, which extracts a date from a markdown header containing a date
-. .\Scripts\Add-FilenamesToHeaders.ps1 # dot-source the function that adds file names to headers
+Import-Module ./Scripts/Read-Date.psm1 # import the Read-Date function, which extracts a date from a markdown header containing a date
+. ./Scripts/Add-FilenamesToHeaders.ps1 # dot-source the function that adds file names to headers
 
 # ----------------------- LastModified.md: ------------------------ #
-    # at start of new week, creates new header "# Week of Monday, <Date>"
+    # at start of new week, creates new header "# Week of Sunday, <Date>"
     # runs through full file list and adds to header by file's last modified date
         # iterate through headers encountered, add as key of dictionary
         # iterate recursively through file list excluding non-coding problem files
@@ -84,8 +84,10 @@ function Update-LC-LastModified {
         }
 
         # add file names under appropriate headers
-        Add-FileNamesToHeaders -RepoPath $repoPath -FilePath $filePath
-        $workDone = $true 
+        $rewriteDetails = Add-FileNamesToHeaders -RepoPath $repoPath -FilePath $filePath
+        if ($reWriteSuccess -eq $true) {
+            
+        }
     }
         
     if (!$workDone) { Write-Host "Work could not be done." }

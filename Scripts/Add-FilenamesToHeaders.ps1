@@ -1,7 +1,9 @@
 ﻿# dot-source script that re-writes the LastModified file with the updated dictionary of new/updated files with last modified dates
-. .\Scripts\ReWrite-ToLastModified.ps1
+. ./Scripts/ReWrite-ToLastModified.ps1
+. ./Scripts/Update-LC-ChangeLog.ps1
 
-# class called File_ModDate with properties FileName (name of file + extension) and LastModified (file's last-modified date on the system)
+
+# class File_ModDate with properties FileName (name of file + extension) and LastModified (file's last-modified date on the system)
 class File_ModDate {
     [string]$FileName
     [string]$Category
@@ -16,6 +18,7 @@ class File_ModDate {
     }
 }
 
+# called by main function Update-LC-LastModified: takes in repo path and file path and creates a descending-sorted dictionary of files by last modified
 function Add-FilenamesToHeaders {
     param (
         $repoPath,
@@ -58,7 +61,7 @@ function Add-FilenamesToHeaders {
                 $relativePath = $relativePath.Substring($relativePath.IndexOf("\") + 1);
                 $category = $relativePath.Substring(0, $relativePath.IndexOf("\"))
                 $relativePath = $relativePath -replace "\\", "/"
-                $category
+                #$category
                 
                 # create object
                 $fileModDateObj = [File_ModDate]::new(
@@ -73,11 +76,12 @@ function Add-FilenamesToHeaders {
             }
         }
     Write-Host "Number of files processed: $count"
-    $lastModTable
-    Write-Output "last mod table before ordering"
+    #$lastModTable
+    #Write-Output "last mod table before ordering"
     Write-Output ""
 
     $sortedPairs = $lastModTable.GetEnumerator() | Sort-Object -Property Name -Descending
-    ReWrite-ToLastModified -FilePath $filePath -SortedTable $sortedPairs
+    $rewriteDate = ReWrite-ToLastModified -FilePath $filePath -SortedTable $sortedPairs
+    
     
 }
