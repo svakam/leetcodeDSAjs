@@ -1,5 +1,5 @@
-﻿# called by Add-FilenamesToHeaders
-function ReWrite-ToLastModified {
+﻿# called by Add-FilenamesToHeaders and returns date (of rewrite)
+function Overwrite-LastModified {
     param (
         $filePath,
         $sortedTable
@@ -38,6 +38,5 @@ function ReWrite-ToLastModified {
         }
     }
 
-    # needs error handling
-    return Get-Date
+    Write-Host "Rewrite process completed."
 }

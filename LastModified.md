@@ -5,6 +5,8 @@
 
 [sumNodesGraph.js](Hard/sumNodesGraph.js) (Hard), last modified at 07/06/2023 21:58:25
 
+[0](0) (Medium), last modified at 07/07/2023 14:54:12
+
 ## Week of Sunday, 6/4/2023
 
 [maxPathSum.js](Hard/Complete/maxPathSum.js) (Hard), last modified at 06/10/2023 16:48:14
@@ -28,6 +30,14 @@
 [findMissingLabel.js](Easy/Complete/findMissingLabel.js) (Easy), last modified at 05/22/2023 21:03:37
 
 [isPowerOf4.js](Easy/Complete/isPowerOf4.js) (Easy), last modified at 05/23/2023 11:56:29
+
+[returnDigitSum.js](Easy/Complete/returnDigitSum.js) (Easy), last modified at 05/22/2023 20:22:07
+
+[returnReverseDigits.js](Easy/Complete/returnReverseDigits.js) (Easy), last modified at 05/22/2023 20:33:51
+
+[sortHM.js](Easy/Complete/sortHM.js) (Easy), last modified at 05/26/2023 12:07:50
+
+[getMissingNum.js](Medium/getMissingNum.js) (Medium), last modified at 05/26/2023 11:37:37
 
 [singleNumber.js](Medium/singleNumber.js) (Medium), last modified at 05/23/2023 17:54:10
 
@@ -67,7 +77,7 @@
 
 [sorting.js](sorting.js) (Medium), last modified at 05/14/2023 16:14:30
 
-## Week of Sunday, 5/7/2023
+[sumMatrixDiagonal.js](Easy/Complete/sumMatrixDiagonal.js) (Easy), last modified at 05/10/2023 17:34:26
 
 [containsDuplicate.js](Hard/containsDuplicate.js) (Hard), last modified at 05/10/2023 17:20:10
 
@@ -168,8 +178,6 @@
 [wordExistsInBoard.js](Medium/IncompleteBacklog/wordExistsInBoard.js) (Medium), last modified at 02/28/2023 14:27:16
 
 ## Week of Sunday, 2/19/2023
-
-[zigZagMatrix.js](Medium/Complete/zigZagMatrix.js) (Medium), last modified at 02/25/2023 13:10:35
 
 [memoize.js](memoize.js) (Medium), last modified at 02/25/2023 12:12:41
 

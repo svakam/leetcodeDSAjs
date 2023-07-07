@@ -1,6 +1,7 @@
 ﻿# import modules and other scripts
 Import-Module ./Scripts/Read-Date.psm1 # import the Read-Date function, which extracts a date from a markdown header containing a date
 . ./Scripts/Add-FilenamesToHeaders.ps1 # dot-source the function that adds file names to headers
+. ./Scripts/Update-LC-ChangeLog.ps1 # dot-source functionality for adding updates of LastModified.md to ChangeLog.md
 
 # ----------------------- LastModified.md: ------------------------ #
     # at start of new week, creates new header "# Week of Sunday, <Date>"
@@ -29,7 +30,6 @@ function Update-LC-LastModified {
     # search for last modified file and if found, set file found to true and file path to the path
     Get-ChildItem -Path "$repoPath" | ForEach-Object { 
         if ($_.BaseName -eq "LastModified") {
-            
             $fileFound = $true
             $filePath = $_.FullName
         }
@@ -84,9 +84,27 @@ function Update-LC-LastModified {
         }
 
         # add file names under appropriate headers
-        $rewriteDetails = Add-FileNamesToHeaders -RepoPath $repoPath -FilePath $filePath
-        if ($reWriteSuccess -eq $true) {
-            
+        Add-FileNamesToHeaders -RepoPath $repoPath -FilePath $filePath
+
+        # update change log with current date of overwrite
+        $overwriteDate = Get-Date -DisplayHint Date
+        
+        Write-Host "Rewrite date of LastModified: $($overwriteDate)"
+
+        # create ChangeLog object
+        $changeLogObj = [ChangeLog]::new(
+            "LastModified.md", # file name
+            $overwriteDate, # overwrite date
+            "Rewrote LastModified.md" # in the future, this description can be more useful
+        )
+
+        # call Update-LC-ChangeLog, consuming ChangeLog and repo path
+        $updatedChangeLog = Update-LC-ChangeLog -ChangeLogObj $changeLogObj -RepoPath $repoPath
+        if ($updatedChangeLog) { 
+            $workDone = $true
+        }
+        else { 
+            $workDone = $false
         }
     }
         
