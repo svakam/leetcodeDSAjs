@@ -20,6 +20,8 @@
 
 ## Week of Sunday, 5/21/2023
 
+[addParentNode.js](.\Easy\Complete\addParentNode.js) (Easy), last modified at 05/23/2023 16:49:37
+
 [convertB10Hex.js](.\Easy\Complete\convertB10Hex.js) (Easy), last modified at 05/25/2023 19:52:53
 
 [findMissingLabel.js](.\Easy\Complete\findMissingLabel.js) (Easy), last modified at 05/22/2023 21:03:37
