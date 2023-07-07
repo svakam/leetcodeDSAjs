@@ -4,10 +4,14 @@
 # class called File_ModDate with properties FileName (name of file + extension) and LastModified (file's last-modified date on the system)
 class File_ModDate {
     [string]$FileName
+    [string]$Category
+    [string]$RelativePath
     [DateTime]$LastModified
 
-    File_ModDate([string]$fn, [DateTime]$lm) {
+    File_ModDate([string]$fn, [string]$category, [string]$relativePath, [DateTime]$lm) {
         $this.FileName = $fn
+        $this.Category = $category
+        $this.RelativePath = $relativePath
         $this.LastModified = $lm
     }
 }
@@ -47,9 +51,20 @@ function Add-FilenamesToHeaders {
                 $lastModTable.Add($firstSunZeroed, (New-Object System.Collections.Generic.List[File_ModDate]))
             }
             else {
+                # get relative directory of file location
+                $relativePath
+                $fullPath = $_.FullName
+                $relativePath = $fullPath.Substring($fullPath.IndexOf("leetcodeDSAjs"))
+                $relativePath = $relativePath.Substring($relativePath.IndexOf("\") + 1);
+                $category = $relativePath.Substring(0, $relativePath.IndexOf("\"))
+                $relativePath = ".\$($relativePath)"
+                $category
+                
                 # create object
                 $fileModDateObj = [File_ModDate]::new(
                     $_.Name,
+                    $category,
+                    $relativePath,
                     $_.LastWriteTime
                 )
                 $list = $lastModTable[$firstSunZeroed]
