@@ -30,9 +30,9 @@
 
 [returnDigitSum.js](Easy/Complete/returnDigitSum.js) (Easy), last modified at 05/22/2023 20:22:07
 
-[sortHM.js](Easy/Complete/sortHM.js) (Easy), last modified at 05/26/2023 12:07:50
+[returnReverseDigits.js](Easy/Complete/returnReverseDigits.js) (Easy), last modified at 05/22/2023 20:33:51
 
-[getMissingNum.js](Medium/getMissingNum.js) (Medium), last modified at 05/26/2023 11:37:37
+[sortHM.js](Easy/Complete/sortHM.js) (Easy), last modified at 05/26/2023 12:07:50
 
 [singleNumber.js](Medium/singleNumber.js) (Medium), last modified at 05/23/2023 17:54:10
 

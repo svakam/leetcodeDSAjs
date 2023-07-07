@@ -6,61 +6,57 @@
 # Add job trigger/s: Trigger parameter 
 # Customize: Options parameter
 
-# import modules and other scripts
-. .\Scripts\Update-LC-LastModified.ps1 # dot-source the function that adds file names to headers
+
+# dot-source (import) the following high-level functions that update the .md files
+. ./Scripts/Update-LC-LastModified.ps1
+. ./Scripts/Update-LC-ReadMe.ps1
+
+$repoPath = (Get-Location).ToString()
+$taskName = "LeetcodeJSDailyUpdate"
+$T = New-JobTrigger -Weekly -DaysOfWeek Sunday -At "12:00 PM"
+
+function Update-Leetcode-Files {
+    Update-LC-ReadMe
+    Update-LC-LastModified
+}
 
 # registers new job with trigger 12pm daily, script block specified below
 function Register-LeetcodeJob {
-    $T = New-JobTrigger -Daily -At "12:00 PM"
     Write-Output $T
-    Register-ScheduledJob -Name $taskName -Trigger $T -ScriptBlock {
-        Update-Leetcode-Files
+    try {
+        Register-ScheduledJob -Name $taskName -Trigger $T -ScriptBlock {
+            Update-Leetcode-Files
+        }
+    } catch {
+        throw "Job was unable to register. $_"
     }
     $job = Get-ScheduledJob -Name $taskName
-    if (!$job) { 
-        throw "Job was unable to register."
-    }
+
     Write-Host "Registered new Leetcode job."
 }
 
+function Update-LeetcodeJob {
+    Write-Output $T
+    try {
+        Get-ScheduledJob -Name $taskName | 
+            Set-ScheduledJob -Name $taskName -Trigger $T -ScriptBlock {
+                Update-Leetcode-Files
+            }
+    } catch {
+        throw "Unable to fetch job. $_"
+    }
+    Write-Host "Updated existing Leetcode job."
+}
+
+    
+
 # check for existing job on local system: if doesn't exist, register it
-#$taskExists = Get-ScheduledTask | Where-Object { $_.TaskName -like $taskName }
-#if (!$taskExists) {
-#    Register-LeetcodeJob
-#}
-
-#try {
-#    $leetcodeJob = Get-ScheduledJob -Name $taskName
-#    $leetcodeJob.Name
-#    exit 0
-#}
-#catch {
-#    "Job does not exist $_"
-#}
-
-$taskName = "LeetcodeJSDailyUpdate"
-$repoPath = (Get-Location).ToString()
-
-# README.md: refreshes files for each category, sorts alphabetically
-function Update-LC-Readme {
-    
+Write-Host "Check for existing cron job that updates Markdown files."
+$task = Get-ScheduledTask | Where-Object { $_.TaskName -like $taskName }
+if (!$task) {
+    Write-Host "Job doesn't exist on the system; attempting to register a new job."
+    Register-LeetcodeJob
+} else {
+    Update-LeetcodeJob
+    Write-Host "Job $($task.TaskName) exists on the system at $($task.TaskPath). Updating job in case job registration details were modified"
 }
-
-# add change log to change log file:
-    # search for change log file
-    # if not exists, create new file
-    # search for headers
-    # add text with timestamp
-
-function Update-LC-ChangeLog {
-    
-}
-
-function Update-Leetcode-Files {
-    Update-LC-Readme
-    Update-LC-LastModified
-    # Update-LC-ChangeLog
-}
-
-Update-Leetcode-Files
-
