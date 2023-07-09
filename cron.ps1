@@ -17,19 +17,22 @@ $lastModifiedJob = "LeetcodeJSLastModifiedWeekly"
 $readmeJob = "LeetcodeJSCREADMEDaily"
 $WeeklyT = New-JobTrigger -Weekly -DaysOfWeek Sunday -At "12:00 PM"
 $DailyT = New-JobTrigger -Daily -At "12:00 PM"
+$jobOption = New-ScheduledJobOption -RunElevated -WakeToRun -ContinueIfGoingOnBattery -StartIfOnBattery -StartIfIdle 
 
 # registers new job with trigger 12pm daily, script block specified below
 
 function Register-ReadmeJob {
     param (
         $jobName,
-        $trigger
+        $trigger,
+        $jobOption
     )
 
     Write-Output $trigger
+    Write-Output $jobOption
 
     try {
-        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScriptBlock {
+        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -ScriptBlock {
             Update-LC-ReadMe
         }
     } catch {
@@ -44,13 +47,15 @@ function Register-ReadmeJob {
 function Register-LastModifiedJob {
     param (
         $jobName,
-        $trigger
+        $trigger,
+        $jobOption
     )
 
     Write-Output $trigger
+    Write-Output $jobOption
 
     try {
-        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScriptBlock {
+        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -ScriptBlock {
             Update-LC-LastModified
         }
     } catch {
@@ -65,14 +70,16 @@ function Register-LastModifiedJob {
 function Update-LastModifiedJob {
     param (
         $jobName,
-        $trigger
+        $trigger,
+        $jobOption
     )
 
     Write-Output $trigger
+    Write-Output $jobOption
 
     try {
         Get-ScheduledJob -Name $jobName | 
-            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScriptBlock {
+            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -ScriptBlock {
                 Update-LC-LastModified
             }
     } catch {
@@ -84,14 +91,16 @@ function Update-LastModifiedJob {
 function Update-ReadmeJob {
     param (
         $jobName,
-        $trigger
+        $trigger,
+        $jobOption
     )
 
     Write-Output $trigger
+    Write-Output $jobOption
 
     try {
         Get-ScheduledJob -Name $jobName | 
-            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScriptBlock {
+            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -ScriptBlock {
                 Update-LC-ReadMe
             }
     } catch {
@@ -111,16 +120,16 @@ $readmeTask = Get-ScheduledTask | Where-Object { $_.TaskName -like $readmeJob }
 # if they don't exist, register the job, else update it in case updates were made in the register functions
 if (!$lastModTask) {
     Write-Host "Last mod task doesn't exist on the system; attempting to register a new job."
-    Register-LastModifiedJob -JobName $lastModifiedJob -Trigger $WeeklyT
+    Register-LastModifiedJob -JobName $lastModifiedJob -Trigger $WeeklyT -JobOption $jobOption
 } else {
     Write-Host "Job $($lastModTask.TaskName) exists on the system at $($lastModTask.TaskPath). Updating job in case job registration details were modified"
-    Update-LastModifiedJob -JobName $lastModifiedJob -Trigger $WeeklyT
+    Update-LastModifiedJob -JobName $lastModifiedJob -Trigger $WeeklyT -JobOption $jobOption
 }
 if (!$readmeTask) {
     Write-Host "Last mod task doesn't exist on the system; attempting to register a new job."
-    Register-ReadmeJob -JobName $readmeJob -Trigger $DailyT
+    Register-ReadmeJob -JobName $readmeJob -Trigger $DailyT -JobOption $jobOption
 } else {
     Write-Host "Job $($readmeTask.TaskName) exists on the system at $($readmeTask.TaskPath). Updating job in case job registration details were modified"
-    Update-ReadmeJob -JobName $readmeJob -Trigger $DailyT
+    Update-ReadmeJob -JobName $readmeJob -Trigger $DailyT -JobOption $jobOption
 }
 # --------------------------------------- #
