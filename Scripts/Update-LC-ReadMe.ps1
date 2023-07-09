@@ -90,4 +90,23 @@ function Update-LC-Readme {
     }
 
     Overwrite-ReadMe -RepoPath $repoPath -FilePath $filePath -CategoryTable $categoryTable
+
+    # update change log with current date of overwrite
+    $overwriteDate = Get-Date -DisplayHint Date
+
+    # create ChangeLog object
+    $changeLogObj = [ChangeLog]::new(
+        "README.md", # file name
+        $overwriteDate, # overwrite date
+        "Rewrote README.md" # in the future, this description can be more useful
+    )
+
+    # call Update-LC-ChangeLog, consuming ChangeLog and repo path
+    $updatedChangeLog = Update-LC-ChangeLog -ChangeLogObj $changeLogObj -RepoPath $repoPath
+    if ($updatedChangeLog) { 
+        $workDone = $true
+    }
+    else { 
+        $workDone = $false
+    }
 }

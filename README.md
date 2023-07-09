@@ -2,7 +2,7 @@
 
 My repository of Leetcode and general algo problems in JavaScript.
 
-(last auto-update Saturday, July 8, 2023 7:40:02 PM)
+(last auto-update Saturday, July 8, 2023 7:44:29 PM)
 
 Files by last modified date, most recent to least: [LastModified.md](LastModified.md)
 
@@ -71,6 +71,8 @@ Change log (WIP): [ChangeLog.md](ChangeLog.md)
 [plantFlowers](Easy/Complete/plantFlowers.js)
 
 [returnDigitSum](Easy/Complete/returnDigitSum.js)
+
+[returnReverseDigits](Easy/Complete/returnReverseDigits.js)
 
 [reverseArrayRecursion](Easy/Complete/reverseArrayRecursion.js)
 
