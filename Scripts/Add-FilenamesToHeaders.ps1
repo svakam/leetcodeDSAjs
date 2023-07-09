@@ -47,7 +47,9 @@ function Add-FilenamesToHeaders {
     # recurse through all valid files
         # for each file, get first sunday of its week
         # if this sunday exists in the table, add this file and its last modified date as File_ModDate obj to its Sunday key list
-    $count = 0
+
+    $count = 0 # num files processed counter
+
     ((Get-ChildItem -Path $repoPath -Exclude "*.git*","*.md","*.txt","Node*","Scripts*","*.ps1","*.psm1","*.json") | # exclude irrelevant file types
         Get-ChildItem -Recurse -File | ForEach-Object {
             $relativePath = $null

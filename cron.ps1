@@ -61,4 +61,4 @@ if (!$task) {
     Write-Host "Job $($task.TaskName) exists on the system at $($task.TaskPath). Updating job in case job registration details were modified"
 }
 
-#Update-LC-LastModified
+Update-LC-ReadMe
