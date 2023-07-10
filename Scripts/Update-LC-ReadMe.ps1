@@ -22,7 +22,7 @@ class FileNameRelPath {
     }
 }
 
-function Update-LC-Readme {
+function Update-LC-ReadMe {
     Write-Output "Repo path: $repoPath" # print the path of repo
     
     $filePath # variable to store readme path

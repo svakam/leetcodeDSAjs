@@ -16,8 +16,8 @@ $readmeJob = "LeetcodeJSREADMEDaily"
 $lastModifiedJob = "LeetcodeJSLastModifiedWeekly"
 $readmeJob = "LeetcodeJSCREADMEDaily"
 $WeeklyT = New-JobTrigger -Weekly -DaysOfWeek Sunday -At "12:00 PM"
-$DailyT = New-JobTrigger -Daily -At "12:00 PM"
-$jobOption = New-ScheduledJobOption -RunElevated -WakeToRun -ContinueIfGoingOnBattery -StartIfOnBattery -StartIfIdle 
+$DailyT = New-JobTrigger -Daily -At "7:12 PM"
+$jobOption = New-ScheduledJobOption -RunElevated -WakeToRun -ContinueIfGoingOnBattery -StartIfOnBattery 
 
 # registers new job with trigger 12pm daily, script block specified below
 
@@ -32,8 +32,13 @@ function Register-ReadmeJob {
     Write-Output $jobOption
 
     try {
-        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -ScriptBlock {
-            Update-LC-ReadMe
+        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -RunNow -ScriptBlock {
+            Write-Host "Running README update at $(Get-Date)"
+            try {
+                Update-LC-ReadMe
+            } catch {
+                "Could not run the Update-LC-ReadMe function: $_"
+            }
         }
     } catch {
         throw "$($jobName) was unable to register. $_"
@@ -55,8 +60,13 @@ function Register-LastModifiedJob {
     Write-Output $jobOption
 
     try {
-        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -ScriptBlock {
-            Update-LC-LastModified
+        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -RunNow -ScriptBlock {
+            Write-Host "Running LastModified update at $(Get-Date)"
+            try {
+                Update-LC-LastModified
+            } catch {
+                "Could not run the Update-LC-LastModified function: $_"
+            }
         }
     } catch {
         throw "$($taskName) was unable to register. $_"
@@ -79,8 +89,13 @@ function Update-LastModifiedJob {
 
     try {
         Get-ScheduledJob -Name $jobName | 
-            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -ScriptBlock {
-                Update-LC-LastModified
+            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -RunNow -ScriptBlock {
+                Write-Host "Running LastModified update at $(Get-Date)"
+                try {
+                    Update-LC-LastModified
+                } catch {
+                    "Could not run the Update-LC-LastModified function: $_"
+                }
             }
     } catch {
         throw "Unable to fetch $($jobName) job. $_"
@@ -100,8 +115,13 @@ function Update-ReadmeJob {
 
     try {
         Get-ScheduledJob -Name $jobName | 
-            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -ScriptBlock {
-                Update-LC-ReadMe
+            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -RunNow -ScriptBlock {
+                Write-Host "Running README update at $(Get-Date)"
+                try {
+                    Update-LC-ReadMe
+                } catch {
+                    "Could not run the Update-LC-ReadMe function: $_"
+                }
             }
     } catch {
         throw "Unable to fetch $($jobName) job. $_"
@@ -117,7 +137,7 @@ Write-Host "Check for existing cron jobs that update Markdown files."
 $lastModTask = Get-ScheduledTask | Where-Object { $_.TaskName -like $lastModifiedJob }
 $readmeTask = Get-ScheduledTask | Where-Object { $_.TaskName -like $readmeJob }
 
-# if they don't exist, register the job, else update it in case updates were made in the register functions
+# if they don't exist, register the job, else update it in case updates were made to job parameters
 if (!$lastModTask) {
     Write-Host "Last mod task doesn't exist on the system; attempting to register a new job."
     Register-LastModifiedJob -JobName $lastModifiedJob -Trigger $WeeklyT -JobOption $jobOption
