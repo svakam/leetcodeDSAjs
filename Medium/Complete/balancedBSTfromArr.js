@@ -23,6 +23,16 @@ function arrayToBST(arr) {
     return helper(0, arr.length);   
   }
 
+// [1,2,3,4,5,6]                          4
+// 0,6
+  // count == 6
+  // mid = 0 + 3 = 3
+  // root = 3
+  // root.left = 0, 3
+    // count == 3
+    // mid = 0 + 1 = 1
+  // root.right = 4, 3 - 0 + 1 = 4
+
 // assume sorted arr
 let arr = []
 let arr2 = [1]

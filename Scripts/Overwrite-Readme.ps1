@@ -1,4 +1,4 @@
-﻿function Overwrite-Readme {
+﻿function Overwrite-ReadMe {
     param(
         $repoPath,
         $filePath,

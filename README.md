@@ -1,4 +1,5 @@
 # Leetcode JS
+(Auto-updates locally every day @ 3pm)
 
 My repository of Leetcode and general algo problems in JavaScript.
 
