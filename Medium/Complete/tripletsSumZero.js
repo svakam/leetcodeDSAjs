@@ -23,13 +23,21 @@ function tripletsToZeroSortedNSquared(arr) {
     for (let l = 0; l < arr.length - 2; l++) {
         let m = l + 1, r = arr.length
         while (m < r) {
-            let curr = [arr[l], arr[m], arr[r]], currSum = arr[l] + arr[m] + arr[r]
+            // current triplet, current sum
+            let curr = [arr[l], arr[m], arr[r]]
+            let currSum = arr[l] + arr[m] + arr[r]
+
+            // if valid sum, push to output
             if (currSum === 0) {
                 triplets.push(curr)
                 m++
                 r-- // increment m, decrement r if curr result 0
+
+            // if too less, increase sum to try add to 0 by incr middle
             } else if (currSum < 0) {
                 m++
+
+            // else if too less, decr right to decr sum
             } else {
                 r--
             }
