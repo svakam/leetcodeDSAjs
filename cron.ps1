@@ -22,10 +22,7 @@ $WeeklyT = New-JobTrigger -Weekly -DaysOfWeek Sunday -At "12:00 PM" # weekly tri
 $DailyT = New-JobTrigger -Daily -At "7:02 PM" # daily trigger
 
 # job option should run: 
-# - with priority
-# - at job trigger's time if asleep or not
-# - if comp on battery or plugged in
-$jobOption = New-ScheduledJobOption -RunElevated -WakeToRun -ContinueIfGoingOnBattery -StartIfOnBattery 
+
 
 # registers new job with trigger 12pm daily, script block specified below
 
