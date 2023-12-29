@@ -12,20 +12,21 @@
 # . ./Scripts/Update-LC-ReadMe.ps1
 
 # paths
+$updateReadMePath = "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\Update-LC-ReadMe.ps1" # path of Update-Readme.md
+$updateLastModifiedPath = "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\Update-LC-LastModified.ps1" # path of LastModified.md
+$repoPath = (Get-Location).ToString() # path of this repo
 
-$updateReadMePath = "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\Update-LC-ReadMe.ps1"
-$updateLastModifiedPath = "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\Update-LC-LastModified.ps1"
-$repoPath = (Get-Location).ToString()
+# names of Scheduled Jobs to register in Task Manager for each file
 $readmeJob = "LeetcodeJSREADMEDaily" # ReadMe.md update job name
 $lastModifiedJob = "LeetcodeJSLastModifiedWeekly" # LastModified.md update job name
-$WeeklyT = New-JobTrigger -Weekly -DaysOfWeek Sunday -At "12:00 PM" # weekly trigger
-$DailyT = New-JobTrigger -Daily -At "7:02 PM" # daily trigger
 
-# job option should run: 
+# triggers
+$WeeklyT = New-JobTrigger -Weekly -DaysOfWeek Sunday -At "12:00 PM" # weekly trigger, Sunday @ 12pm
+$DailyT = New-JobTrigger -Daily -At "3:00 PM" # daily trigger @ 3pm
 
-
-# registers new job with trigger 12pm daily, script block specified below
-
+# function to register new job with trigger 12pm daily, script block specified below
+# input: job name, job trigger, option, path of file to run script on
+# called after line 85
 function Register-Job {
     param ( # accepts a job name, trigger, and job options object
         $jobName,
@@ -44,13 +45,16 @@ function Register-Job {
         throw "$($jobName) was unable to register. $_"
     }
 
-    # get job and print registration
+    # get job from system and confirm registration by printing to console
     $job = Get-ScheduledJob -Name $jobName
     Write-Host $($job)
 
     Write-Host "Registered new $($jobName) job."
 }
 
+# function to try updating the job if it already exists on the system
+# input: job name, job trigger, option, path of file to run script on
+# called after line 85
 function Update-Job {
     param (
         $jobName,
@@ -64,7 +68,7 @@ function Update-Job {
 
     try {
         Get-ScheduledJob -Name $jobName | 
-            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -RunNow -FilePath $filePath
+            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -RunNow -FilePath $filePath # updates job
     } catch {
         throw "Unable to fetch $($jobName) job. $_"
     }
