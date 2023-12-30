@@ -11,6 +11,8 @@
 #. ./Scripts/Update-LC-LastModified.ps1
 #. ./Scripts/Update-LC-ReadMe.ps1
 
+Start-Transcript -Path "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\logs\cron-log.txt" -Append
+
 # paths
 $updateReadMePath = "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\Update-LC-ReadMe.ps1" # path of Update-Readme.md
 $updateLastModifiedPath = "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\Update-LC-LastModified.ps1" # path of LastModified.md
@@ -22,7 +24,7 @@ $lastModifiedJob = "LeetcodeJSLastModifiedWeekly" # LastModified.md update job n
 
 # triggers
 $WeeklyT = New-JobTrigger -Weekly -DaysOfWeek Sunday -At "12:00 PM" # weekly trigger, Sunday @ 12pm
-$DailyT = New-JobTrigger -Daily -At "5:34 PM" # daily trigger @ 3pm
+$DailyT = New-JobTrigger -Daily -At "11:20 AM" # daily trigger @ 3pm
 
 # default parameter for job option: wake to run, start if idle
 $jobOption = New-ScheduledJobOption -RunElevated -WakeToRun -ContinueIfGoingOnBattery
@@ -45,7 +47,7 @@ function Register-Job {
 
     # try to register a job with name, trigger, option and path
     try {
-        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -FilePath $filePath
+        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -FilePath $filePath -ArgumentList "-ExecutionPolicy Bypass -File $filePath"
     } catch {
         throw "$($jobName) was unable to register. $_"
     }
@@ -72,7 +74,7 @@ function Update-Job {
 
     try {
         Get-ScheduledJob -Name $jobName | 
-            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -FilePath $filePath # updates job
+            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -FilePath $filePath -ArgumentList "-ExecutionPolicy Bypass -File $filePath" # updates job
     } catch {
         throw "Unable to fetch $($jobName) job. $_"
     }

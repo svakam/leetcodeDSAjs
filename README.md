@@ -2,7 +2,7 @@
 
 My repository of Leetcode and general algo problems in JavaScript.
 
-(last auto-update Friday, December 29, 2023 5:32:53 PM)
+(last auto-update Saturday, December 30, 2023 12:19:36 PM)
 
 Files by last modified date, most recent to least: [LastModified.md](LastModified.md)
 
@@ -118,6 +118,8 @@ Change log (WIP): [ChangeLog.md](ChangeLog.md)
 
 [singleNumber](Medium/singleNumber.js)
 
+[smallestCommonRegion](Medium/smallestCommonRegion.js)
+
 [advArraySq](Medium/Complete/advArraySq.js)
 
 [anagramOrderAppr](Medium/Complete/anagramOrderAppr.js)
@@ -138,9 +140,9 @@ Change log (WIP): [ChangeLog.md](ChangeLog.md)
 
 [dutchFlag](Medium/Complete/dutchFlag.js)
 
-[factorialTrailingZeroes](Medium/Complete/factorialTrailingZeroes.js)
-
 [fibonacci](Medium/Complete/fibonacci.js)
+
+[findMinRotatedArr](Medium/Complete/findMinRotatedArr.js)
 
 [flipNumbers](Medium/Complete/flipNumbers.js)
 
@@ -213,6 +215,8 @@ Change log (WIP): [ChangeLog.md](ChangeLog.md)
 [interleaves](Medium/IncompleteBacklog/interleaves.js)
 
 [LRUcache](Medium/IncompleteBacklog/LRUcache.js)
+
+[wordExistsInBoard](Medium/IncompleteBacklog/wordExistsInBoard.js)
 
 [anagramGroups](Medium/IncompletePriority/anagramGroups.js)
 
