@@ -8,8 +8,8 @@
 
 
 # dot-source (import) the following high-level functions that update the .md files
-# . ./Scripts/Update-LC-LastModified.ps1
-# . ./Scripts/Update-LC-ReadMe.ps1
+#. ./Scripts/Update-LC-LastModified.ps1
+#. ./Scripts/Update-LC-ReadMe.ps1
 
 # paths
 $updateReadMePath = "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\Update-LC-ReadMe.ps1" # path of Update-Readme.md
@@ -22,7 +22,10 @@ $lastModifiedJob = "LeetcodeJSLastModifiedWeekly" # LastModified.md update job n
 
 # triggers
 $WeeklyT = New-JobTrigger -Weekly -DaysOfWeek Sunday -At "12:00 PM" # weekly trigger, Sunday @ 12pm
-$DailyT = New-JobTrigger -Daily -At "3:00 PM" # daily trigger @ 3pm
+$DailyT = New-JobTrigger -Daily -At "5:34 PM" # daily trigger @ 3pm
+
+# default parameter for job option: wake to run, start if idle
+$jobOption = New-ScheduledJobOption -RunElevated -WakeToRun -ContinueIfGoingOnBattery
 
 # function to register new job with trigger 12pm daily, script block specified below
 # input: job name, job trigger, option, path of file to run script on
@@ -35,12 +38,14 @@ function Register-Job {
         $filePath
     )
 
+    Write-Host "`nIn Register-Job. Registering job with params job name $($jobName), trigger $($trigger), job option $($jobOption), and file path $($filePath)."
+
     Write-Output $trigger
     Write-Output $jobOption
 
     # try to register a job with name, trigger, option and path
     try {
-        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -RunNow -FilePath $filePath
+        Register-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -FilePath $filePath
     } catch {
         throw "$($jobName) was unable to register. $_"
     }
@@ -49,7 +54,7 @@ function Register-Job {
     $job = Get-ScheduledJob -Name $jobName
     Write-Host $($job)
 
-    Write-Host "Registered new $($jobName) job."
+    Write-Host "Registered new $($jobName) job.`n"
 }
 
 # function to try updating the job if it already exists on the system
@@ -63,16 +68,15 @@ function Update-Job {
         $filePath
     )
 
-    Write-Output $trigger
-    Write-Output $jobOption
+    Write-Host "`nIn Update-Job. Updating job with params job name $($jobName), trigger $($trigger), job option $($jobOption), and file path $($filePath)."
 
     try {
         Get-ScheduledJob -Name $jobName | 
-            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -RunNow -FilePath $filePath # updates job
+            Set-ScheduledJob -Name $jobName -Trigger $trigger -ScheduledJobOption $jobOption -FilePath $filePath # updates job
     } catch {
         throw "Unable to fetch $($jobName) job. $_"
     }
-    Write-Host "Updated last $($jobName) job."
+    Write-Host "Updated last $($jobName) job.`n"
 }
 
 # ---------------- MAIN ----------------- #
@@ -99,4 +103,3 @@ if (!$readmeTask) {
     Update-Job -JobName $readmeJob -Trigger $DailyT -JobOption $jobOption -FilePath $updateReadMePath
 }
 # --------------------------------------- #
-
