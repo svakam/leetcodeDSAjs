@@ -128,3 +128,9 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# powershell
+*.ps1
+*.ps1m
+.ps1
+.ps1m
