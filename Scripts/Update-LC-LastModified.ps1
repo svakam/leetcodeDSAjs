@@ -1,4 +1,8 @@
 ﻿# import modules and other scripts
+Start-Transcript -Path "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\logs\update-lm-log.txt" -Append
+
+Write-Host "Importing modules..."
+
 Import-Module ./Scripts/Read-Date.psm1 # import the Read-Date function, which extracts a date from a markdown header containing a date
 . ./Scripts/Add-FilenamesToHeaders.ps1 # dot-source the function that adds file names to headers
 . ./Scripts/Update-LC-ChangeLog.ps1 # dot-source functionality for adding updates of LastModified.md to ChangeLog.md
@@ -20,7 +24,8 @@ Import-Module ./Scripts/Read-Date.psm1 # import the Read-Date function, which ex
 # this function updates the LastModified.md file by obtaining the current list of headers, running through all valid leetcode files, and placing them under headers by
 # the file's last modified date. also creates new headers if it's a new week
 function Update-LC-LastModified {
-    Write-Output "Repo path: $repoPath" # print the path of repo
+    Write-Host "In Update-LC-LastModified."
+    Write-Host "Repo path: $repoPath" # print the path of repo
     $filePath # declare file path var
 
     # initialize file found and work done bool vars
@@ -28,6 +33,7 @@ function Update-LC-LastModified {
     $workDone = $false
     
     # search for last modified file and if found, set file found to true and file path to the path
+    Write-Host "Searching for path of Last-Modified.md..."
     Get-ChildItem -Path "$repoPath" | ForEach-Object { 
         if ($_.BaseName -eq "LastModified") {
             $fileFound = $true
@@ -99,6 +105,7 @@ function Update-LC-LastModified {
         )
 
         # call Update-LC-ChangeLog, consuming ChangeLog and repo path
+        Write-Host "Calling Update-LC-ChangeLog."
         $updatedChangeLog = Update-LC-ChangeLog -ChangeLogObj $changeLogObj -RepoPath $repoPath
         if ($updatedChangeLog) { 
             $workDone = $true
@@ -112,3 +119,5 @@ function Update-LC-LastModified {
     else { Write-Host "Work was completed." }
 }
 # ----------------------------------------------------------- #
+
+Update-LC-LastModified

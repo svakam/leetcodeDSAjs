@@ -19,10 +19,13 @@ function Update-LC-ChangeLog {
         $repoPath
     )
 
+    Write-Host "In Update-LC-ChangeLog."
+
     $workDone = $false # only updates to true if file was read and written to
     $filePath # variable for file path
     $fileFound = $false # file found
 
+    Write-Host "Finding path of ChangeLog.md..."
     Get-ChildItem -Path $repoPath | ForEach-Object {
         if ($_.BaseName -eq "ChangeLog") {
             $fileFound = $true
@@ -40,7 +43,6 @@ function Update-LC-ChangeLog {
                 $_ -replace $_, "$($_)`n`n## Change made on $($changeLogObj.ChangeDate) to $($changeLogObj.FileName):`n`n$($changeLogObj.Description)"
             } else {
                 $_
-                Write-Host $count
             }
             $count++
         }

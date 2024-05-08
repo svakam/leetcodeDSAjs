@@ -5,7 +5,7 @@
         $categoryTable
     )
 
-    Write-Host "In Overwrite-Readme"
+    Write-Host "In Overwrite-ReadMe."
     $filePath
 
     Set-Content -Path $filePath "# Leetcode JS`n`nMy repository of Leetcode and general algo problems in JavaScript.`n"
@@ -19,7 +19,12 @@
 
         (Add-Content -Path $filePath "### $($category)`n") | Wait-Process
         foreach ($file in $catList) {
-            (Add-Content -Path $filePath "[$($file.FileName)]($($file.RelPath))`n") | Wait-Process
+            try {
+                (Add-Content -Path $filePath "[$($file.FileName)]($($file.RelPath))`n") | Wait-Process
+            }
+            catch {
+                Write-Host "Unable to add the following to $($filePath): file name $($file.FileName) with relative path $($file.RelPath). $_"
+            }
         }
     }
 

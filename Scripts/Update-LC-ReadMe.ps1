@@ -1,4 +1,5 @@
 ﻿. ./Scripts/Overwrite-Readme.ps1 # dot source external script to overwrite readme
+. ./Scripts/Update-LC-ChangeLog.ps1 # dot-source functionality for adding updates of LastModified.md to ChangeLog.md
 
 # ----------------------- README.md: ------------------------ #
     # displays all leetcode files, categorized by difficulty
@@ -22,14 +23,21 @@ class FileNameRelPath {
     }
 }
 
+Start-Transcript -Path "C:\Users\vikra\dev\Repos\GitHub\leetcodeDSAjs\Scripts\logs\update-readme-log.txt" -Append
+
 function Update-LC-ReadMe {
-    Write-Output "Repo path: $repoPath" # print the path of repo
+
+    Write-Host "In Update-LC-ReadMe."
+    Write-Host "Repo path: $repoPath" # print the path of repo
     
     $filePath # variable to store readme path
+    $fileFound = $false
     $categoryTable = @{} # store dictionary categories with list of files
     $count = 0 # num files processed
 
-    # search for last modified file and if found, set file found to true and file path to the path
+    Write-Host "Searching for README.md..."
+
+    # search for readme file and if found, set file found to true and file path to the path
     Get-ChildItem -Path "$repoPath" | ForEach-Object { 
         if ($_.BaseName -eq "README") {
             $fileFound = $true
@@ -37,76 +45,90 @@ function Update-LC-ReadMe {
         }
     }
 
-    ((Get-ChildItem -Path $repoPath -Exclude "*.git*","*.md","*.txt","Node*","Scripts*","*.ps1","*.psm1","*.json") | # exclude irrelevant file types
-        Get-ChildItem -Recurse -File | ForEach-Object {
+    if (!$fileFound) {
+        Write-Host "File was not found."
+    } else {
+        Write-Host "File was found. Path: " $filePath
+        Write-Host "Processing files..."
 
-            $count++ # increment num file processed 
+        ((Get-ChildItem -Path $repoPath -Exclude "*.git*","*.md","*.txt","Node*","Scripts*","*.ps1","*.psm1","*.json") | # exclude irrelevant file types
+            Get-ChildItem -Recurse -File | ForEach-Object {
+
+                $count++ # increment num file processed 
             
-            # extract relative path and category from file full path
-            $category
-            $relativePath
-
-            # get relative directory of file location
-            $fullPath = $_.FullName
-            $relativePath = $fullPath.Substring($fullPath.IndexOf("leetcodeDSAjs"))
-            if ($relativePath.IndexOf("\") -gt 0) {
-                $relativePath = $relativePath.Substring($relativePath.IndexOf("\") + 1);
-            }
-            if ($relativePath.IndexOf("\") -gt 0) {
-                $category = $relativePath.Substring(0, $relativePath.IndexOf("\"))
-            }
-            $relativePath = $relativePath -replace "\\", "/"
-
-            if (!$category -or $category -like "Misc" -or $category -like "img") {
-                $category = "Misc"
-            }
-
-            # create new file object with file name and its relative path 
-            $newFileObj = [FileNameRelPath]::new(
-                $_.BaseName,
+                # extract relative path and category from file full path
+                $category
                 $relativePath
-            )
 
-            if (!$categoryTable.ContainsKey($category)) { # if the table doesn't contain this sunday, add it as a key with a value of List<File_ModDate>
-                $newList = (New-Object System.Collections.Generic.List[FileNameRelPath])
-                $newList.Add($newFileObj)
-                $categoryTable.Add($category, $newList)
-            } else {
-                $existingList = $categoryTable[$category]
-                $existingList.Add($newFileObj)
-                $categoryTable[$category] = $existingList
-            }
-        })
+                # get relative directory of file location
+                $fullPath = $_.FullName
+                $relativePath = $fullPath.Substring($fullPath.IndexOf("leetcodeDSAjs"))
+                if ($relativePath.IndexOf("\") -gt 0) {
+                    $relativePath = $relativePath.Substring($relativePath.IndexOf("\") + 1);
+                }
+                if ($relativePath.IndexOf("\") -gt 0) {
+                    $category = $relativePath.Substring(0, $relativePath.IndexOf("\"))
+                }
+                $relativePath = $relativePath -replace "\\", "/"
 
-    Write-Host "Number of files processed: $count"
+                if (!$category -or $category -like "Misc" -or $category -like "img") {
+                    $category = "Misc"
+                }
+
+                # create new file object with file name and its relative path 
+                $newFileObj = [FileNameRelPath]::new(
+                    $_.BaseName,
+                    $relativePath
+                )
+
+                if (!$categoryTable.ContainsKey($category)) { # if the table doesn't contain this sunday, add it as a key with a value of List<File_ModDate>
+                    $newList = (New-Object System.Collections.Generic.List[FileNameRelPath])
+                    $newList.Add($newFileObj)
+                    $categoryTable.Add($category, $newList)
+                } else {
+                    $existingList = $categoryTable[$category]
+                    $existingList.Add($newFileObj)
+                    $categoryTable[$category] = $existingList
+                }
+            })
+
+        Write-Host "Number of files processed: $count"
     
-    $categoryTable.GetEnumerator() | ForEach-Object {
-        $count = 0
-        Write-Host "Number of files in category $($_.Key):"
-        $($_.Value | ForEach-Object {
-            $count++
-        })
-        Write-Host $count
+        $categoryTable.GetEnumerator() | ForEach-Object {
+            $count = 0
+            Write-Host "Number of files in category $($_.Key):`n"
+            $($_.Value | ForEach-Object {
+                $count++
+            })
+            Write-Host $count
+        }
+
+        Write-Host "Overwriting README.md..."
+        Overwrite-ReadMe -RepoPath $repoPath -FilePath $filePath -CategoryTable $categoryTable
+
+        # update change log with current date of overwrite
+        $overwriteDate = Get-Date -DisplayHint Date
+
+        # create ChangeLog object
+        $changeLogObj = [ChangeLog]::new(
+            "README.md", # file name
+            $overwriteDate, # overwrite date
+            "Rewrote README.md" # in the future, this description can be more useful
+        )
+
+        # call Update-LC-ChangeLog, consuming ChangeLog and repo path
+        Write-Host "Updating ChangeLog.md..."
+        $updatedChangeLog = Update-LC-ChangeLog -ChangeLogObj $changeLogObj -RepoPath $repoPath
+        if ($updatedChangeLog) { 
+            $workDone = $true
+        }
+        else { 
+            $workDone = $false
+        }
     }
 
-    Overwrite-ReadMe -RepoPath $repoPath -FilePath $filePath -CategoryTable $categoryTable
-
-    # update change log with current date of overwrite
-    $overwriteDate = Get-Date -DisplayHint Date
-
-    # create ChangeLog object
-    $changeLogObj = [ChangeLog]::new(
-        "README.md", # file name
-        $overwriteDate, # overwrite date
-        "Rewrote README.md" # in the future, this description can be more useful
-    )
-
-    # call Update-LC-ChangeLog, consuming ChangeLog and repo path
-    $updatedChangeLog = Update-LC-ChangeLog -ChangeLogObj $changeLogObj -RepoPath $repoPath
-    if ($updatedChangeLog) { 
-        $workDone = $true
-    }
-    else { 
-        $workDone = $false
-    }
+    if (!$workDone) { Write-Host "Work could not be done." }
+    else { Write-Host "Work was completed." }
 }
+
+Update-LC-ReadMe
